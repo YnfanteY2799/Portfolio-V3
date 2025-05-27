@@ -1,10 +1,11 @@
-import { geistMono, geistSans } from "@/fonts";
+import { AppProvider } from "@/components";
+import { cn } from "@/lib/utils";
+import { fonts } from "@/fonts";
 import "@/css/globals.css";
 
 import type { ReactNode } from "react";
 import type { Metadata } from "next";
 import type { IRSC } from "@/types";
-import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = {
 	title: "Create Next App",
@@ -12,10 +13,11 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: Readonly<IRSC>): ReactNode {
-	const fonts = `${geistSans.variable} ${geistMono.variable}`;
 	return (
 		<html lang="en">
-			<body className={cn(fonts, `antialiased`)}>{children}</body>
+			<body className={cn(fonts, `antialiased`)}>
+				<AppProvider>{children}</AppProvider>
+			</body>
 		</html>
 	);
 }
