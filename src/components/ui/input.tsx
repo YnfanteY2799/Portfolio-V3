@@ -1,5 +1,6 @@
-import { ComponentProps, ReactNode } from "react";
-import { cn } from "@/utils/functions/index";
+import { cn } from "@/utils/functions";
+
+import type { ComponentProps, ReactNode } from "react";
 
 export default function Input({ className, type, ...props }: ComponentProps<"input">): ReactNode {
 	return (
