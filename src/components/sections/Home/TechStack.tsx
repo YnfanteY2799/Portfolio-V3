@@ -71,10 +71,10 @@ const technologies = [
 	},
 ];
 
-export default function TechStack(): ReactNode {
+export default function HomeTechStackSection(): ReactNode {
 	return (
 		<section id="tech-stack" className="py-24 px-6">
-			<BlurOnScroll className="container mx-auto">
+			<BlurOnScroll className="container mx-auto" transitionDuration={1.5}>
 				<motion.div
 					initial={{ opacity: 0, y: 50 }}
 					whileInView={{ opacity: 1, y: 0 }}

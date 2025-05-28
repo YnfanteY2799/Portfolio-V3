@@ -1,4 +1,4 @@
-import { HomeHeroSection, HomeAboutSection, HomeTechStackSection } from "@/components/sections";
+import { HomeHeroSection, HomeAboutSection, HomeTechStackSection, GitHubActivitySection } from "@/components/sections";
 import type { ReactNode } from "react";
 
 export default function Home(): ReactNode {
@@ -7,6 +7,7 @@ export default function Home(): ReactNode {
 			<HomeHeroSection />
 			<HomeAboutSection />
 			<HomeTechStackSection />
+			<GitHubActivitySection />
 		</>
 	);
 }

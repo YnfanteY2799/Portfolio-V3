@@ -41,7 +41,7 @@ const attributes = [
 export default function HomeAboutSection(): ReactNode {
 	return (
 		<section id="About_Me" className="py-24 px-6 bg-muted/20">
-			<BlurOnScroll className="container mx-auto">
+			<BlurOnScroll className="container mx-auto" transitionDuration={1.5}>
 				<m.div
 					viewport={{ once: true }}
 					className="text-center mb-20"
