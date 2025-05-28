@@ -1,6 +1,9 @@
-import MatrixDemo from "@/components/ui/Backgrounds/MatrixRain";
-import Navbar from "@/components/ui/Navbar";
+import { HomeHeroSection } from "@/components/sections";
 
 export default function Home() {
-	return <MatrixDemo />;
+	return (
+		<>
+			<HomeHeroSection />
+		</>
+	);
 }
