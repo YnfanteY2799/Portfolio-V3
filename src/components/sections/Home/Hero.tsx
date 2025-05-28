@@ -9,8 +9,8 @@ export default function HomeHeroSection(): ReactNode {
 		<section id="About_Me" className="relative isolate overflow-hidden bg-background">
 			<BlurOnScroll className="mx-auto max-w-7xl px-6 py-20 lg:flex items-center lg:gap-x-10 lg:px-8" transitionDuration={2}>
 				<m.div
-					initial={{ opacity: 0, y: 50 }}
 					animate={{ opacity: 1, y: 0 }}
+					initial={{ opacity: 0, y: 50 }}
 					transition={{ duration: 0.8, type: "spring", stiffness: 100 }}
 					className="mx-auto max-w-2xl lg:mx-0 lg:max-w-lg lg:flex-shrink-0">
 					<m.h1
@@ -42,8 +42,8 @@ export default function HomeHeroSection(): ReactNode {
 					className="mx-auto mt-16 lg:mt-0"
 					transition={{ duration: 0.8, delay: 0.6 }}>
 					<Image
-						width={600}
-						height={600}
+						width={100}
+						height={100}
 						src="/dudul.svg"
 						alt="Basic Doodle"
 						className="relative w-[500px] rounded-2xl shadow-xl ring-1 ring-gray-900/10"
