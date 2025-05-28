@@ -111,17 +111,6 @@ const BlurOnScrollInner = memo(function BlurOnScroll(componentProps: IBlurOnScro
 		if (elementRef.current && shouldAnimate) {
 			// Set will-change only when animation is about to happen
 			elementRef.current.style.willChange = "opacity, transform, filter";
-
-			// Preload motion resources for smoother first animation
-			if (typeof window !== "undefined") {
-				const preconnect = document.createElement("link");
-				preconnect.rel = "preconnect";
-				preconnect.href = "https://framerusercontent.com";
-				document.head.appendChild(preconnect);
-
-				return () => document.head.removeChild(preconnect);
-			}
-
 			return () => {
 				if (elementRef.current) elementRef.current.style.willChange = "auto";
 			};
@@ -133,11 +122,11 @@ const BlurOnScrollInner = memo(function BlurOnScroll(componentProps: IBlurOnScro
 		() => ({
 			visible: { opacity: 1, filter: "blur(0px)", x: 0, y: 0, transition: { duration: actualDuration, delay: delay, ease: easing } },
 			hidden: {
-				opacity: 0,
-				filter: actualBlurAmount > 0 ? `blur(${actualBlurAmount}px)` : undefined,
 				x: direction === "left" ? actualDistance : direction === "right" ? -actualDistance : 0,
 				y: direction === "up" ? actualDistance : direction === "down" ? -actualDistance : 0,
+				filter: actualBlurAmount > 0 ? `blur(${actualBlurAmount}px)` : undefined,
 				transition: { duration: actualDuration, delay: delay, ease: easing },
+				opacity: 0,
 			},
 		}),
 		[actualBlurAmount, actualDuration, actualDistance, delay, direction, easing]
