@@ -123,3 +123,22 @@ export interface SharedIntersectionObserverResult<T extends Element> {
 	 */
 	disconnect: () => void;
 }
+
+/**
+ * Device performance capability levels
+ */
+export type DevicePerformanceLevel = "high" | "medium" | "low";
+
+/**
+ * Configuration options for device performance detection
+ */
+export interface DevicePerformanceOptions {
+	/** Threshold for low-end CPU cores (default: 4) */
+	lowEndCoreThreshold?: number;
+	/** Threshold for mid-range CPU cores (default: 6) */
+	midRangeCoreThreshold?: number;
+	/** DOM processing time threshold in ms (default: 800) */
+	domProcessingThreshold?: number;
+	/** Memory threshold in GB for low-end devices (default: 4) */
+	memoryThreshold?: number;
+}
