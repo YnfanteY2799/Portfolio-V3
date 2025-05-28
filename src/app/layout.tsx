@@ -1,5 +1,5 @@
 import { AppProvider } from "@/components";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/functions";
 import { fonts } from "@/fonts";
 import "@/css/globals.css";
 
