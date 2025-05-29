@@ -1,12 +1,13 @@
 "use client";
 import { ExternalLink, Github, Search, X, SortAsc, Sparkles, Grid, List } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-import { motion, AnimatePresence } from "motion/react";
+import { m as motion, AnimatePresence } from "motion/react";
 import Button from "@/components/ui/button";
 import { useState, useMemo } from "react";
 import Badge from "@/components/ui/badge";
 import Input from "@/components/ui/input";
 import { cn } from "@/utils/functions";
+import BlurOnScroll from "@/components/ui/HOC/BlurOnScroll";
 
 const projects = [
 	{
@@ -111,15 +112,15 @@ export default function ProjectsSection() {
 		});
 
 		// Sort projects
-		filtered.sort((a, b) => {
+		filtered.sort(({ category, date, title }, { category: b_c, date: b_d, title: b_t }) => {
 			switch (sortBy) {
 				case "Title":
-					return a.title.localeCompare(b.title);
+					return title.localeCompare(b_t);
 				case "Category":
-					return a.category.localeCompare(b.category);
+					return category.localeCompare(b_c);
 				case "Date":
 				default:
-					return Number.parseInt(b.date) - Number.parseInt(a.date);
+					return Number.parseInt(b_d) - Number.parseInt(date);
 			}
 		});
 
@@ -132,13 +133,9 @@ export default function ProjectsSection() {
 		// Staggered exit animation
 		await new Promise((resolve) => setTimeout(resolve, 200));
 
-		if (filterType === "category") {
-			setSelectedCategory(value);
-		} else if (filterType === "type") {
-			setSelectedType(value);
-		} else if (filterType === "sort") {
-			setSortBy(value);
-		}
+		if (filterType === "category") setSelectedCategory(value);
+		else if (filterType === "type") setSelectedType(value);
+		else if (filterType === "sort") setSortBy(value);
 
 		// Staggered entrance animation
 		setTimeout(() => setIsAnimating(false), 100);
@@ -178,7 +175,7 @@ export default function ProjectsSection() {
 
 	return (
 		<section id="projects" className="py-16 md:py-24 px-4 md:px-6 bg-muted/20">
-			<div className="container mx-auto">
+			<BlurOnScroll className="container mx-auto" transitionDuration={1.5}>
 				<motion.div
 					initial={{ opacity: 0, y: 50 }}
 					whileInView={{ opacity: 1, y: 0 }}
@@ -214,7 +211,7 @@ export default function ProjectsSection() {
 								{/* Category Filter */}
 								<div className="space-y-3">
 									<div className="flex items-center gap-2">
-										<div className="w-2 h-2 bg-primary rounded-full"></div>
+										<div className="w-2 h-2 bg-primary rounded-full" />
 										<span className="text-sm font-medium text-foreground">Category</span>
 									</div>
 									<div className="grid grid-cols-2 gap-2">
@@ -246,14 +243,15 @@ export default function ProjectsSection() {
 										{types.map((type) => (
 											<motion.div key={type} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
 												<Button
-													variant={selectedType === type ? "default" : "outline"}
 													size="sm"
 													onClick={() => handleFilterChange("type", type)}
-													className={`w-full rounded-xl text-xs font-medium transition-all duration-300 ${
+													variant={selectedType === type ? "default" : "outline"}
+													className={cn(
+														"w-full rounded-xl text-xs font-medium transition-all duration-300",
 														selectedType === type
 															? "bg-primary text-primary-foreground shadow-lg shadow-primary/25"
 															: "hover:bg-primary/10 hover:border-primary/50"
-													}`}>
+													)}>
 													{type}
 												</Button>
 											</motion.div>
@@ -271,14 +269,15 @@ export default function ProjectsSection() {
 										{sortOptions.map((option) => (
 											<motion.div key={option} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
 												<Button
-													variant={sortBy === option ? "default" : "outline"}
 													size="sm"
 													onClick={() => handleFilterChange("sort", option)}
-													className={`w-full rounded-xl text-xs font-medium transition-all duration-300 ${
+													variant={sortBy === option ? "default" : "outline"}
+													className={cn(
+														"w-full rounded-xl text-xs font-medium transition-all duration-300",
 														sortBy === option
 															? "bg-primary text-primary-foreground shadow-lg shadow-primary/25"
 															: "hover:bg-primary/10 hover:border-primary/50"
-													}`}>
+													)}>
 													{option}
 												</Button>
 											</motion.div>
@@ -298,14 +297,14 @@ export default function ProjectsSection() {
 											<AnimatePresence>
 												{showSearch ? (
 													<motion.div
+														className="overflow-hidden"
+														exit={{ height: 0, opacity: 0 }}
 														initial={{ height: 0, opacity: 0 }}
 														animate={{ height: "auto", opacity: 1 }}
-														exit={{ height: 0, opacity: 0 }}
-														transition={{ duration: 0.3, ease: "easeInOut" }}
-														className="overflow-hidden">
+														transition={{ duration: 0.3, ease: "easeInOut" }}>
 														<Input
-															placeholder="Search projects..."
 															value={searchQuery}
+															placeholder="Search projects..."
 															onChange={(e) => setSearchQuery(e.target.value)}
 															className="w-full rounded-xl bg-background/50 border-border/50 focus:border-primary/50 focus:bg-background/80 transition-all duration-300"
 														/>
@@ -328,18 +327,18 @@ export default function ProjectsSection() {
 										<span className="text-sm font-medium text-foreground">View</span>
 										<div className="grid grid-cols-2 gap-2">
 											<Button
-												variant={viewMode === "grid" ? "default" : "outline"}
 												size="sm"
+												className="rounded-xl"
 												onClick={() => setViewMode("grid")}
-												className="rounded-xl">
+												variant={viewMode === "grid" ? "default" : "outline"}>
 												<Grid className="w-4 h-4 mr-1" />
 												Grid
 											</Button>
 											<Button
-												variant={viewMode === "list" ? "default" : "outline"}
 												size="sm"
+												className="rounded-xl"
 												onClick={() => setViewMode("list")}
-												className="rounded-xl">
+												variant={viewMode === "list" ? "default" : "outline"}>
 												<List className="w-4 h-4 mr-1" />
 												List
 											</Button>
@@ -640,7 +639,7 @@ export default function ProjectsSection() {
 						</div>
 					</motion.div>
 				)}
-			</div>
+			</BlurOnScroll>
 		</section>
 	);
 }
