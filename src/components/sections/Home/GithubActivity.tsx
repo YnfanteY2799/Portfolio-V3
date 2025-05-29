@@ -1,9 +1,8 @@
 "use client";
-
-import { motion, AnimatePresence } from "motion/react";
-import { useState, useEffect, useMemo } from "react";
 import { GitCommit, Star, Filter, TrendingUp, Code, Activity, Eye, GitFork, ExternalLink, Loader2, Calendar, AlertCircle } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import { motion, AnimatePresence } from "motion/react";
+import { useState, useEffect, useMemo } from "react";
 import Button from "@/components/ui/button";
 import Badge from "@/components/ui/badge";
 
@@ -189,25 +188,16 @@ export default function GitHubActivitySection() {
 				const username = "octocat"; // Change this to your GitHub username
 
 				// Add delay to prevent rate limiting
-				if (retryCount > 0) {
-					await new Promise((resolve) => setTimeout(resolve, 1000 * retryCount));
-				}
+				if (retryCount > 0) await new Promise((resolve) => setTimeout(resolve, 1000 * retryCount));
 
 				// Fetch user data with error handling
 				const userResponse = await fetch(`https://api.github.com/users/${username}`, {
-					headers: {
-						Accept: "application/vnd.github.v3+json",
-						"User-Agent": "Portfolio-Website",
-					},
+					headers: { Accept: "application/vnd.github.v3+json", "User-Agent": "Portfolio-Website" },
 				});
 
 				if (!userResponse.ok) {
-					if (userResponse.status === 403) {
-						throw new Error("GitHub API rate limit exceeded. Please try again later.");
-					}
-					if (userResponse.status === 404) {
-						throw new Error(`GitHub user '${username}' not found. Please check the username.`);
-					}
+					if (userResponse.status === 403) throw new Error("GitHub API rate limit exceeded. Please try again later.");
+					if (userResponse.status === 404) throw new Error(`GitHub user '${username}' not found. Please check the username.`);
 					throw new Error(`GitHub API error: ${userResponse.status}`);
 				}
 
@@ -216,15 +206,10 @@ export default function GitHubActivitySection() {
 
 				// Fetch repositories with pagination support
 				const reposResponse = await fetch(`https://api.github.com/users/${username}/repos?sort=updated&per_page=50&type=owner`, {
-					headers: {
-						Accept: "application/vnd.github.v3+json",
-						"User-Agent": "Portfolio-Website",
-					},
+					headers: { Accept: "application/vnd.github.v3+json", "User-Agent": "Portfolio-Website" },
 				});
 
-				if (!reposResponse.ok) {
-					throw new Error(`Failed to fetch repositories: ${reposResponse.status}`);
-				}
+				if (!reposResponse.ok) throw new Error(`Failed to fetch repositories: ${reposResponse.status}`);
 
 				const reposData: GitHubRepo[] = await reposResponse.json();
 
@@ -246,9 +231,7 @@ export default function GitHubActivitySection() {
 
 				// Retry logic for transient errors
 				if (retryCount < 2 && !errorMessage.includes("not found")) {
-					setTimeout(() => {
-						setRetryCount((prev) => prev + 1);
-					}, 2000);
+					setTimeout(() => setRetryCount((prev) => prev + 1), 2000);
 					return;
 				}
 
@@ -492,11 +475,8 @@ export default function GitHubActivitySection() {
 	const calculateCurrentStreak = () => {
 		let streak = 0;
 		for (let i = contributions.length - 1; i >= 0; i--) {
-			if (contributions[i].count > 0) {
-				streak++;
-			} else {
-				break;
-			}
+			if (contributions[i].count > 0) streak++;
+			else break;
 		}
 		return streak;
 	};
@@ -586,7 +566,7 @@ export default function GitHubActivitySection() {
 	}
 
 	return (
-		<section id="github-activity" className="py-24 px-6 bg-gradient-to-br from-background via-muted/5 to-background">
+		<section id="github-activity" className="py-10 px-6 bg-gradient-to-br from-background via-muted/5 to-background">
 			<div className="container mx-auto">
 				{/* Header */}
 				<motion.div
