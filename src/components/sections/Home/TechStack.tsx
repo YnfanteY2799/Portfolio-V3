@@ -1,6 +1,6 @@
 "use client";
-import { Card, CardContent } from "@/components/ui/card";
 import BlurOnScroll from "@/components/ui/HOC/BlurOnScroll";
+import { Card, CardContent } from "@/components/ui/card";
 import { m as motion } from "motion/react";
 import { type ReactNode } from "react";
 

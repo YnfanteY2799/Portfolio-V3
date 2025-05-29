@@ -1,26 +1,26 @@
 "use client";
 import { ExternalLink, Github, Search, X, SortAsc, Sparkles, Grid, List } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import { motion, AnimatePresence } from "motion/react";
 import Button from "@/components/ui/button";
 import { useState, useMemo } from "react";
 import Badge from "@/components/ui/badge";
 import Input from "@/components/ui/input";
-
-import { motion, AnimatePresence } from "framer-motion";
+import { cn } from "@/utils/functions";
 
 const projects = [
 	{
 		title: "E-Commerce Platform",
 		description: "A full-stack e-commerce solution built with Next.js, Stripe, and PostgreSQL featuring real-time inventory management.",
-		image: "/placeholder.svg?height=300&width=400",
 		tags: ["Next.js", "TypeScript", "Stripe", "PostgreSQL"],
+		image: "/placeholder.svg?height=300&width=400",
 		category: "Full Stack",
 		type: "Web Application",
+		featured: true,
+		height: "tall",
 		date: "2024",
 		github: "#",
 		live: "#",
-		featured: true,
-		height: "tall",
 	},
 	{
 		title: "AI Task Management",
@@ -194,23 +194,13 @@ export default function ProjectsSection() {
 					</p>
 				</motion.div>
 
-				{/* Three.js Showcase */}
-				{/* <motion.div
-					initial={{ opacity: 0, scale: 0.9 }}
-					whileInView={{ opacity: 1, scale: 1 }}
-					transition={{ duration: 0.8, type: "spring", stiffness: 100 }}
-					viewport={{ once: true }}
-					className="mb-12 md:mb-16">
-					<ThreeJSShowcase />
-				</motion.div> */}
-
 				{/* Enhanced Filters with Mobile Optimization */}
 				<motion.div
-					initial={{ opacity: 0, y: 30 }}
-					whileInView={{ opacity: 1, y: 0 }}
-					transition={{ duration: 0.6 }}
 					viewport={{ once: true }}
-					className="mb-8 md:mb-12">
+					className="mb-8 md:mb-12"
+					transition={{ duration: 0.6 }}
+					initial={{ opacity: 0, y: 30 }}
+					whileInView={{ opacity: 1, y: 0 }}>
 					<div className="bg-card/30 backdrop-blur-xl border border-border/50 rounded-2xl md:rounded-3xl p-4 md:p-8 shadow-2xl">
 						<div className="flex flex-col gap-6 md:gap-8">
 							{/* Filter Header */}
@@ -397,31 +387,31 @@ export default function ProjectsSection() {
 				{/* Enhanced Projects Grid with Engaging Filter Animations */}
 				<AnimatePresence mode="wait">
 					<motion.div
-						key={`${selectedCategory}-${selectedType}-${searchQuery}-${sortBy}-${viewMode}`}
+						exit={{ opacity: 0 }}
 						initial={{ opacity: 0 }}
 						animate={{ opacity: isAnimating ? 0.3 : 1 }}
-						exit={{ opacity: 0 }}
-						transition={{ duration: 0.4, ease: "easeInOut" }}>
+						transition={{ duration: 0.4, ease: "easeInOut" }}
+						key={`${selectedCategory}-${selectedType}-${searchQuery}-${sortBy}-${viewMode}`}>
 						{/* Filter Animation Overlay */}
 						<AnimatePresence>
 							{isAnimating && (
 								<motion.div
+									exit={{ opacity: 0 }}
 									initial={{ opacity: 0 }}
 									animate={{ opacity: 1 }}
-									exit={{ opacity: 0 }}
 									className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm">
 									<motion.div
+										exit={{ scale: 0, rotate: 720 }}
 										initial={{ scale: 0, rotate: 0 }}
 										animate={{ scale: 1, rotate: 360 }}
-										exit={{ scale: 0, rotate: 720 }}
 										transition={{ duration: 0.6, ease: "easeInOut" }}
 										className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full"
 									/>
 									<motion.div
-										initial={{ opacity: 0, y: 20 }}
-										animate={{ opacity: 1, y: 0 }}
-										exit={{ opacity: 0, y: -20 }}
 										transition={{ delay: 0.2 }}
+										exit={{ opacity: 0, y: -20 }}
+										animate={{ opacity: 1, y: 0 }}
+										initial={{ opacity: 0, y: 20 }}
 										className="absolute mt-24 text-primary font-medium">
 										Filtering projects...
 									</motion.div>
@@ -431,47 +421,24 @@ export default function ProjectsSection() {
 
 						{/* Projects Display */}
 						<div
-							className={
+							className={cn(
 								viewMode === "grid" ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 auto-rows-max" : "space-y-4 md:space-y-6"
-							}>
+							)}>
 							{filteredAndSortedProjects.map((project, index) => (
 								<motion.div
 									key={project.title}
-									initial={{
-										opacity: 0,
-										y: 100,
-										scale: 0.8,
-										rotateX: 45,
-										z: -100,
-									}}
-									animate={{
-										opacity: 1,
-										y: 0,
-										scale: 1,
-										rotateX: 0,
-										z: 0,
-									}}
-									transition={{
-										duration: 0.8,
-										delay: index * 0.1,
-										type: "spring",
-										stiffness: 100,
-										damping: 15,
-									}}
+									initial={{ opacity: 0, y: 100, scale: 0.8, rotateX: 45, z: -100 }}
+									animate={{ opacity: 1, y: 0, scale: 1, rotateX: 0, z: 0 }}
+									transition={{ duration: 0.8, delay: index * 0.1, type: "spring", stiffness: 100, damping: 15 }}
 									whileHover={{
+										z: 50,
 										y: -15,
 										scale: 1.02,
 										rotateY: viewMode === "grid" ? 5 : 0,
-										z: 50,
-										transition: {
-											duration: 0.3,
-											type: "spring",
-											stiffness: 400,
-											damping: 25,
-										},
+										transition: { duration: 0.3, type: "spring", stiffness: 400, damping: 25 },
 									}}
-									className={`group ${viewMode === "grid" ? getProjectHeight(project.height) : ""} perspective-1000`}
-									style={{ transformStyle: "preserve-3d" }}>
+									style={{ transformStyle: "preserve-3d" }}
+									className={cn("group perspective-1000", viewMode === "grid" ? getProjectHeight(project.height) : "")}>
 									<Card className="bg-card/50 backdrop-blur-sm border-border/50 hover:border-primary/50 transition-all duration-500 overflow-hidden h-full shadow-xl hover:shadow-2xl group-hover:shadow-primary/20">
 										{viewMode === "grid" ? (
 											<>
