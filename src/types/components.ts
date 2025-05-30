@@ -1,4 +1,5 @@
 import type { CSSProperties, ReactNode } from "react";
+import type { Icon } from "@phosphor-icons/react";
 
 /**
  * Props for the BlurOnScroll component.
@@ -112,3 +113,15 @@ export interface IBlurOnScrollProps {
 }
 
 export type CallBackEntryType = { isIntersecting: boolean; intersectionRatio: number; entry: IntersectionObserverEntry };
+
+export interface IAboutCardProps {
+	Icon: Icon;
+	idx: number;
+	title: string;
+	gradient: string;
+	description: string;
+}
+
+export interface IAboutSectionProps {
+	attributes?: Array<Omit<IAboutCardProps, "idx">>;
+}

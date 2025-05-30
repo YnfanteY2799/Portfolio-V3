@@ -1,3 +1,6 @@
+export * from "./icons.tsx";
+
+
 export const navItems = [
 	{ name: "About", href: "#about" },
 	{ name: "Tech Stack", href: "#tech-stack" },
@@ -9,3 +12,5 @@ export const navItems = [
 	{ name: "Blog", href: "#blog" },
 	{ name: "Anime", href: "/about" },
 ];
+
+

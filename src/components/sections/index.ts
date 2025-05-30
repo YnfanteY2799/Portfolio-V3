@@ -1,7 +1,7 @@
 export { default as GitHubActivitySection } from "./Home/GithubActivity.tsx";
-export { default as HomeExperienceSection } from "./Home/Experience.tsx";
 export { default as TestimonialsSection } from "./Home/Testimonials.tsx";
-export { default as HomeTechStackSection } from "./Home/TechStack.tsx";
-export { default as HomeProjectSection } from "./Home/Projects.tsx";
-export { default as HomeAboutSection } from "./Home/About.tsx";
-export { default as HomeHeroSection } from "./Home/Hero.tsx";
+export { default as ExperienceSection } from "./Home/Experience.tsx";
+export { default as TechStackSection } from "./Home/TechStack.tsx";
+export { default as ProjectSection } from "./Home/Projects.tsx";
+export { default as AboutSection } from "./Home/About.tsx";
+export { default as HeroSection } from "./Home/Hero.tsx";

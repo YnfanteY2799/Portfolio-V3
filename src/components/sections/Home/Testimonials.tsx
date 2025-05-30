@@ -5,6 +5,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { motion, AnimatePresence } from "framer-motion";
 import Button from "@/components/ui/button";
 import Badge from "@/components/ui/badge";
+import Image from "next/image";
+import { TestimonialsSlideVariants, TestimonialsTransitionVariants } from "@/utils/variants";
 
 const testimonials = [
 	{
@@ -82,13 +84,13 @@ const testimonials = [
 ];
 
 export default function TestimonialsSection() {
-	const [currentIndex, setCurrentIndex] = useState(0);
 	const [isAutoPlaying, setIsAutoPlaying] = useState(true);
-	const [direction, setDirection] = useState(0);
+	const [currentIndex, setCurrentIndex] = useState(0);
 	const [isPaused, setIsPaused] = useState(false);
+	const [direction, setDirection] = useState(0);
 
 	const goToNext = useCallback(() => {
-		setDirection(1);
+		setDirection(() => 1);
 		setCurrentIndex((prev) => (prev + 1) % testimonials.length);
 	}, []);
 
@@ -98,83 +100,59 @@ export default function TestimonialsSection() {
 	}, []);
 
 	const goToSlide = useCallback(
-		(index: number) => {
-			setDirection(index > currentIndex ? 1 : -1);
-			setCurrentIndex(index);
+		(i: number) => {
+			setDirection(() => (i > currentIndex ? 1 : -1));
+			setCurrentIndex(() => i);
 		},
 		[currentIndex]
 	);
 
 	const resetCarousel = useCallback(() => {
-		setDirection(1);
-		setCurrentIndex(0);
-		setIsAutoPlaying(true);
-		setIsPaused(false);
+		setDirection(() => 1);
+		setCurrentIndex(() => 0);
+		setIsAutoPlaying(() => true);
+		setIsPaused(() => false);
 	}, []);
 
 	const toggleAutoPlay = useCallback(() => {
-		setIsAutoPlaying(!isAutoPlaying);
-		setIsPaused(!isPaused);
+		setIsAutoPlaying((old) => !old);
+		setIsPaused((old) => !old);
 	}, [isAutoPlaying, isPaused]);
+
+	function handleKeyPress({ key, ...e }: KeyboardEvent): void {
+		switch (key) {
+			case "ArrowLeft":
+				goToPrevious();
+				break;
+			case "ArrowRight":
+				goToNext();
+				break;
+			case " ":
+				e.preventDefault();
+				toggleAutoPlay();
+				break;
+			case "Home":
+				goToSlide(0);
+				break;
+			case "End":
+				goToSlide(testimonials.length - 1);
+				break;
+		}
+	}
 
 	useEffect(() => {
 		if (!isAutoPlaying || isPaused) return;
-
 		const interval = setInterval(goToNext, 5000);
 		return () => clearInterval(interval);
 	}, [isAutoPlaying, isPaused, goToNext]);
 
 	// Keyboard navigation
 	useEffect(() => {
-		const handleKeyPress = (event: KeyboardEvent) => {
-			switch (event.key) {
-				case "ArrowLeft":
-					goToPrevious();
-					break;
-				case "ArrowRight":
-					goToNext();
-					break;
-				case " ":
-					event.preventDefault();
-					toggleAutoPlay();
-					break;
-				case "Home":
-					goToSlide(0);
-					break;
-				case "End":
-					goToSlide(testimonials.length - 1);
-					break;
-			}
-		};
-
 		window.addEventListener("keydown", handleKeyPress);
 		return () => window.removeEventListener("keydown", handleKeyPress);
 	}, [goToNext, goToPrevious, goToSlide, toggleAutoPlay]);
 
 	const currentTestimonial = testimonials[currentIndex];
-
-	const slideVariants = {
-		enter: (direction: number) => ({
-			x: direction > 0 ? 1000 : -1000,
-			opacity: 0,
-			scale: 0.8,
-			rotateY: direction > 0 ? 45 : -45,
-		}),
-		center: {
-			zIndex: 1,
-			x: 0,
-			opacity: 1,
-			scale: 1,
-			rotateY: 0,
-		},
-		exit: (direction: number) => ({
-			zIndex: 0,
-			x: direction < 0 ? 1000 : -1000,
-			opacity: 0,
-			scale: 0.8,
-			rotateY: direction < 0 ? 45 : -45,
-		}),
-	};
 
 	return (
 		<section className="py-24 px-6 bg-gradient-to-br from-background via-muted/10 to-background overflow-hidden">
@@ -198,19 +176,14 @@ export default function TestimonialsSection() {
 					<div className="relative h-[500px] flex items-center justify-center perspective-1000">
 						<AnimatePresence initial={false} custom={direction} mode="wait">
 							<motion.div
-								key={currentIndex}
-								custom={direction}
-								variants={slideVariants}
+								exit="exit"
 								initial="enter"
 								animate="center"
-								exit="exit"
-								transition={{
-									x: { type: "spring", stiffness: 300, damping: 30 },
-									opacity: { duration: 0.2 },
-									scale: { duration: 0.4 },
-									rotateY: { duration: 0.4 },
-								}}
-								className="absolute w-full max-w-4xl">
+								custom={direction}
+								key={currentIndex}
+								variants={TestimonialsSlideVariants}
+								className="absolute w-full max-w-4xl"
+								transition={TestimonialsTransitionVariants}>
 								<Card className={`relative overflow-hidden border-2 ${currentTestimonial.accentColor} bg-card/50 backdrop-blur-sm shadow-2xl`}>
 									{/* Glass Background */}
 									<div className={`absolute inset-0 bg-gradient-to-br ${currentTestimonial.color} opacity-60`}></div>
@@ -226,9 +199,11 @@ export default function TestimonialsSection() {
 													transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
 													className="relative inline-block mb-6">
 													<div className="w-24 h-24 mx-auto lg:mx-0 rounded-full overflow-hidden border-4 border-primary/30 shadow-xl">
-														<img
-															src={currentTestimonial.image || "/placeholder.svg"}
+														<Image
+															src="/placeholder.svg"
 															alt={currentTestimonial.name}
+															width={100}
+															height={100}
 															className="w-full h-full object-cover"
 														/>
 													</div>
