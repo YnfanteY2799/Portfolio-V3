@@ -1,5 +1,5 @@
+import type { IGenericIconSvg } from "@/types/components";
 import type { ReactElement } from "react";
-import type { IGenericIconSvg } from "@/types";
 
 export default function DenoIcon({ size = 24, className }: IGenericIconSvg): ReactElement {
   return (
