@@ -1,6 +1,11 @@
 import type { CSSProperties, ReactNode } from "react";
 import type { Icon } from "@phosphor-icons/react";
 
+export interface IGenericIconSvg {
+	size?: number;
+	className?: string;
+}
+
 /**
  * Props for the BlurOnScroll component.
  */
