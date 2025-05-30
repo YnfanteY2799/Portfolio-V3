@@ -131,4 +131,16 @@ export interface IAboutSectionProps {
 	attributes?: Array<Omit<IAboutCardProps, "idx">>;
 }
 
-export interface ITechCardProps {}
+export interface ITechCardProps {
+	idx: number;
+	icon: string;
+	name: string;
+	color: string;
+	category: string;
+	proficiency: number;
+	description: string;
+}
+
+export interface ITechStackProps {
+	technologies?: Array<Omit<ITechCardProps, "idx">>;
+}

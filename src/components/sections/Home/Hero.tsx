@@ -4,7 +4,7 @@ import { type ReactNode } from "react";
 import { m } from "motion/react";
 import Image from "next/image";
 
-export default function HomeHeroSection(): ReactNode {
+export default function HeroSection(): ReactNode {
 	return (
 		<section id="About_Me" className="relative isolate overflow-hidden bg-background">
 			<BlurOnScroll className="mx-auto max-w-7xl px-6 py-20 lg:flex items-center lg:gap-x-10 lg:px-8" transitionDuration={1.5}>
