@@ -5,6 +5,7 @@ import PostgreIcon from "@/components/svg/data/PostgreIcon";
 import DockerIcon from "@/components/svg/tools/DockerIcon";
 import ReactIcon from "@/components/svg/tools/ReactIcon";
 import TSIcon from "@/components/svg/lang/TsIcon";
+import { ITechCardProps } from "@/types/components";
 
 export const default_attributes = [
 	{
@@ -39,11 +40,11 @@ export const default_attributes = [
 	},
 ];
 
-export const default_technologies = [
+export const default_technologies: Array<Omit<ITechCardProps, "idx">> = [
 	{
 		name: "React",
-		Icon: ReactIcon,
 		proficiency: 95,
+		Icon: <ReactIcon />,
 		category: "Frontend",
 		color: "from-blue-400 to-blue-600",
 		description: "A JavaScript library for building user interfaces with component-based architecture.",
@@ -51,14 +52,14 @@ export const default_technologies = [
 	{
 		name: "Next.js",
 		proficiency: 90,
-		Icon: NextJsIcon,
 		category: "Frontend",
+		Icon: <NextJsIcon />,
 		color: "from-gray-700 to-gray-900",
 		description: "The React framework for production with server-side rendering and static generation.",
 	},
 	{
-		Icon: TSIcon,
 		proficiency: 88,
+		Icon: <TSIcon />,
 		name: "TypeScript",
 		category: "Language",
 		color: "from-blue-500 to-blue-700",
@@ -67,13 +68,13 @@ export const default_technologies = [
 	{
 		proficiency: 85,
 		name: "Node.js",
-		icon: NodeJsIcon,
 		category: "Backend",
+		Icon: <NodeJsIcon />,
 		color: "from-green-500 to-green-700",
 		description: "JavaScript runtime built on Chrome's V8 JavaScript engine for server-side development.",
 	},
 	{
-		icon: "🐍",
+		Icon: "🐍",
 		name: "Python",
 		proficiency: 80,
 		category: "Backend",
@@ -82,14 +83,14 @@ export const default_technologies = [
 	},
 	{
 		proficiency: 82,
-		icon: PostgreIcon,
 		name: "PostgreSQL",
 		category: "Database",
+		Icon: <PostgreIcon />,
 		color: "from-blue-600 to-indigo-600",
 		description: "Advanced open-source relational database with strong SQL compliance.",
 	},
 	{
-		icon: "☁️",
+		Icon: "☁️",
 		name: "AWS",
 		proficiency: 75,
 		category: "Cloud",
@@ -99,8 +100,8 @@ export const default_technologies = [
 	{
 		name: "Docker",
 		proficiency: 78,
-		icon: DockerIcon,
 		category: "DevOps",
+		Icon: <DockerIcon />,
 		color: "from-blue-500 to-cyan-500",
 		description: "Platform for developing, shipping, and running applications in containers.",
 	},

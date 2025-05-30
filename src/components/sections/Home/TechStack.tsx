@@ -25,7 +25,7 @@ export default function TechStackSection({ technologies = default_technologies }
 
 				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
 					{technologies.map((tech, i) => (
-						<TechCards idx={i} {...tech} />
+						<TechCards idx={i} {...tech} key={i} />
 					))}
 				</div>
 			</BlurOnScroll>
