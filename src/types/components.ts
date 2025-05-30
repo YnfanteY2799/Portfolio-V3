@@ -133,12 +133,12 @@ export interface IAboutSectionProps {
 
 export interface ITechCardProps {
 	idx: number;
-	icon: string;
 	name: string;
 	color: string;
 	category: string;
 	proficiency: number;
 	description: string;
+	Icon: string | ReactNode;
 }
 
 export interface ITechStackProps {

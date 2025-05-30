@@ -1,4 +1,10 @@
 import { CodeIcon, RocketLaunchIcon, UsersIcon, IslandIcon, KanbanIcon } from "@phosphor-icons/react/dist/ssr";
+import NodeJsIcon from "@/components/svg/framework/NodeJsIcon";
+import NextJsIcon from "@/components/svg/framework/NextJsIcon";
+import PostgreIcon from "@/components/svg/data/PostgreIcon";
+import DockerIcon from "@/components/svg/tools/DockerIcon";
+import ReactIcon from "@/components/svg/tools/ReactIcon";
+import TSIcon from "@/components/svg/lang/TsIcon";
 
 export const default_attributes = [
 	{
@@ -35,23 +41,23 @@ export const default_attributes = [
 
 export const default_technologies = [
 	{
-		icon: "⚛️",
 		name: "React",
+		Icon: ReactIcon,
 		proficiency: 95,
 		category: "Frontend",
 		color: "from-blue-400 to-blue-600",
 		description: "A JavaScript library for building user interfaces with component-based architecture.",
 	},
 	{
-		icon: "▲",
 		name: "Next.js",
 		proficiency: 90,
+		Icon: NextJsIcon,
 		category: "Frontend",
 		color: "from-gray-700 to-gray-900",
 		description: "The React framework for production with server-side rendering and static generation.",
 	},
 	{
-		icon: "📘",
+		Icon: TSIcon,
 		proficiency: 88,
 		name: "TypeScript",
 		category: "Language",
@@ -59,9 +65,9 @@ export const default_technologies = [
 		description: "Typed superset of JavaScript that compiles to plain JavaScript.",
 	},
 	{
-		icon: "🟢",
 		proficiency: 85,
 		name: "Node.js",
+		icon: NodeJsIcon,
 		category: "Backend",
 		color: "from-green-500 to-green-700",
 		description: "JavaScript runtime built on Chrome's V8 JavaScript engine for server-side development.",
@@ -75,8 +81,8 @@ export const default_technologies = [
 		description: "High-level programming language with elegant syntax and powerful libraries.",
 	},
 	{
-		icon: "🐘",
 		proficiency: 82,
+		icon: PostgreIcon,
 		name: "PostgreSQL",
 		category: "Database",
 		color: "from-blue-600 to-indigo-600",
@@ -91,9 +97,9 @@ export const default_technologies = [
 		description: "Comprehensive cloud computing platform with extensive service offerings.",
 	},
 	{
-		icon: "🐳",
 		name: "Docker",
 		proficiency: 78,
+		icon: DockerIcon,
 		category: "DevOps",
 		color: "from-blue-500 to-cyan-500",
 		description: "Platform for developing, shipping, and running applications in containers.",

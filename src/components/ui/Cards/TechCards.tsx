@@ -5,7 +5,7 @@ import type { ReactNode } from "react";
 import { Card, CardContent } from "../card";
 import { cn } from "@/utils/functions";
 
-export default function TechCards({ name, color, category, description, icon, proficiency, idx }: ITechCardProps): ReactNode {
+export default function TechCards({ name, color, category, description, Icon, proficiency, idx }: ITechCardProps): ReactNode {
 	return (
 		<m.div
 			key={name}
@@ -22,7 +22,7 @@ export default function TechCards({ name, color, category, description, icon, pr
 					<div className="relative z-10">
 						<div className="flex items-center justify-between mb-4">
 							<m.div className="text-3xl" whileHover={{ scale: 1.2, rotate: 10, transition: { duration: 0.2, type: "spring", stiffness: 400 } }}>
-								{icon}
+								{Icon}
 							</m.div>
 							<span className="text-xs text-muted-foreground bg-muted/50 px-2 py-1 rounded-full">{category}</span>
 						</div>
