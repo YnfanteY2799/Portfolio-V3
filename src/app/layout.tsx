@@ -1,4 +1,4 @@
-import { AppProvider } from "@/components";
+import AppProvider from "@/components/providers/AppProvider";
 import { notFound } from "next/navigation";
 import { locales } from "@/i18n/routing";
 import { cn } from "@/utils/functions";
