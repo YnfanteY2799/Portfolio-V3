@@ -125,3 +125,5 @@ export interface IAboutCardProps {
 export interface IAboutSectionProps {
 	attributes?: Array<Omit<IAboutCardProps, "idx">>;
 }
+
+export interface ITechCardProps {}

@@ -1,4 +1,4 @@
-import { HeroSection, AboutSection, ProjectSection, TechStackSection, TestimonialsSection, GitHubActivitySection } from "@/components/sections";
+import { HeroSection, AboutSection, TechStackSection, GitHubActivitySection, ProjectSection, TestimonialsSection } from "@/components/sections";
 
 import type { ReactNode } from "react";
 
