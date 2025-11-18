@@ -21,7 +21,7 @@ export default async function RootLayout({ children, params }: Readonly<ITRSC>):
 	if (!hasLocale(locales, locale)) notFound();
 
 	return (
-		<html lang="en">
+		<html lang="en" suppressHydrationWarning>
 			<head>
 				<script crossOrigin="anonymous" src="//unpkg.com/react-scan/dist/auto.global.js" />
 			</head>

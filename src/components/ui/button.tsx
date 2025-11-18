@@ -1,41 +1,114 @@
-import { cva, type VariantProps } from "class-variance-authority";
+"use client";
+
+import { buttonVariants } from "@/utils/variants/components.ts";
+import { useState, useCallback } from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { cn } from "@/utils/functions";
 
-import type { ComponentProps, ReactNode } from "react";
+import type { IButtonProps } from "@/types/components";
+import type { ReactNode, MouseEvent } from "react";
 
-export const buttonVariants = cva(
-	"inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
-	{
-		variants: {
-			variant: {
-				default: "bg-primary text-primary-foreground shadow-xs hover:bg-primary/90",
-				destructive:
-					"bg-destructive text-white shadow-xs hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60",
-				outline:
-					"border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50",
-				secondary: "bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80",
-				ghost: "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
-				link: "text-primary underline-offset-4 hover:underline",
-			},
-			size: {
-				default: "h-9 px-4 py-2 has-[>svg]:px-3",
-				sm: "h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5",
-				lg: "h-10 rounded-md px-6 has-[>svg]:px-4",
-				icon: "size-9",
-			},
-		},
-		defaultVariants: {
-			variant: "default",
-			size: "default",
-		},
-	}
-);
+interface RippleType {
+	id: number;
+	x: number;
+	y: number;
+}
 
-export type IButtonProps = ComponentProps<"button"> & VariantProps<typeof buttonVariants> & { asChild?: boolean };
+/**
+ * Button component that provides a flexible, accessible clickable element
+ * with consistent styling, behavior, and ripple effect.
+ *
+ * The Button component uses the `buttonVariants` utility for styling and supports
+ * polymorphic rendering through Radix UI's Slot component. It can be rendered as
+ * any HTML element or component while maintaining button styling and accessibility.
+ * Features a material design inspired ripple effect on click.
+ *
+ * @example
+ * ```tsx
+ * // Basic usage
+ * <Button>Click me</Button>
+ *
+ * // With variants
+ * <Button variant="outline" size="sm">Small Outline Button</Button>
+ *
+ * // As a link
+ * <Button asChild>
+ *   <Link href="/about">About Page</Link>
+ * </Button>
+ *
+ * // With custom className
+ * <Button className="my-custom-class">Custom Button</Button>
+ *
+ * // With onClick handler
+ * <Button onClick={() => console.log('Button clicked')}>Log Click</Button>
+ *
+ * // Disable ripple effect
+ * <Button disableRipple>No Ripple</Button>
+ * ```
+ *
+ * @param props - The component props
+ * @param props.className - Additional CSS classes to apply to the button
+ * @param props.variant - The visual style variant of the button (e.g., "default", "outline")
+ * @param props.size - The size variant of the button (e.g., "default", "sm", "lg")
+ * @param props.asChild - When true, button styling is applied to its child component instead
+ * @param props.disableRipple - When true, disables the ripple effect
+ * @param props.children - The content to render inside the button
+ * @returns A button component with the specified styling, behavior, and ripple effect
+ */
+export default function Button({
+	className,
+	variant,
+	size,
+	asChild = false,
+	disableRipple = false,
+	onClick,
+	...props
+}: IButtonProps): ReactNode {
+	// State
+	const [ripples, setRipples] = useState<Array<RippleType>>([]);
 
-export default function Button({ asChild = false, className, variant, size, ...props }: IButtonProps): ReactNode {
+	// Component
 	const Comp = asChild ? Slot : "button";
 
-	return <Comp data-slot="button" className={cn(buttonVariants({ variant, size, className }))} {...props} />;
+	// Callbacks
+	const createRipple = useCallback((event: MouseEvent<Element>): void => {
+		const button = event.currentTarget;
+		const rect = button.getBoundingClientRect();
+		const x = event.clientX - rect.left;
+		const y = event.clientY - rect.top;
+		const newRipple: RippleType = { id: Date.now() + Math.random(), x, y };
+		setRipples((prev) => [...prev, newRipple]);
+		setTimeout(() => setRipples((prev) => prev.filter((ripple) => ripple.id !== newRipple.id)), 600);
+	}, []);
+
+	const handleClick = useCallback(
+		(event: MouseEvent<HTMLButtonElement>): void => {
+			if (!disableRipple) createRipple(event as MouseEvent<Element>);
+			onClick?.(event);
+		},
+		[createRipple, disableRipple, onClick]
+	);
+
+	return (
+		<Comp
+			data-slot="button"
+			onClick={handleClick}
+			className={cn(buttonVariants({ variant, size, className }), "relative overflow-hidden")}
+			{...props}>
+			{props.children}
+
+			{/* Ripple container */}
+			{!disableRipple && (
+				<span className="absolute inset-0 pointer-events-none">
+					{ripples.map(({ id, x, y }) => (
+						<span
+							key={id}
+							style={{ left: x - 10, top: y - 10 }}
+							className="absolute w-5 h-5 rounded-full bg-current opacity-60 animate-[ripple_0.6s_ease-out] origin-center"
+						/>
+					))}
+				</span>
+			)}
+		</Comp>
+	);
 }

@@ -1,4 +1,5 @@
-import type { CSSProperties, ReactNode } from "react";
+import type { ButtonVariantProps } from "@/utils/variants/components.ts";
+import type { ComponentProps, CSSProperties, ReactNode } from "react";
 import type { Icon } from "@phosphor-icons/react";
 
 export interface IGenericIconSvg {
@@ -143,4 +144,9 @@ export interface ITechCardProps {
 
 export interface ITechStackProps {
 	technologies?: Array<Omit<ITechCardProps, "idx">>;
+}
+
+export interface IButtonProps extends ComponentProps<"button">, ButtonVariantProps {
+	disableRipple?: boolean;
+	asChild?: boolean;
 }

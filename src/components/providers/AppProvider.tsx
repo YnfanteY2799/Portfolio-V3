@@ -1,6 +1,13 @@
+"use client";
+import { ThemeProvider } from "next-themes";
+
 import type { ReactNode } from "react";
 import type { IRSC } from "@/types";
 
 export default function AppProvider({ children }: IRSC): ReactNode {
-	return <>{children}</>;
+	return (
+		<ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+			{children}
+		</ThemeProvider>
+	);
 }
