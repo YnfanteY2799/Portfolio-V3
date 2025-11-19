@@ -5,6 +5,7 @@ import Button from "@/components/ui/button";
 import { type ReactNode } from "react";
 import { m } from "motion/react";
 import Image from "next/image";
+import RotatingText from "@/components/ui/Animateds/RotatingText";
 
 export default function HeroSection(): ReactNode {
 	return (
@@ -27,16 +28,32 @@ export default function HeroSection(): ReactNode {
 							animate={{ opacity: 1, y: 0 }}
 							initial={{ opacity: 0, y: 20 }}
 							transition={{ duration: 0.8, delay: 0.2 }}
-							className="mt-6 text-lg leading-8 text-muted-foreground">
+							className="mt-4 text-lg leading-8 text-muted-foreground">
 							Where minimal design meets floral artistry. We craft elegant experiences that inspire and elevate your space.
 						</m.p>
+						<RotatingText
+							texts={["React", "Bits", "Is", "Cool!"]}
+							mainClassName=""
+							staggerFrom={"last"}
+							initial={{ y: "100%" }}
+							animate={{ y: 0 }}
+							exit={{ y: "-120%" }}
+							staggerDuration={0.025}
+							splitLevelClassName="overflow-hidden pb-0.5 sm:pb-1 md:pb-1"
+							transition={{ type: "spring", damping: 30, stiffness: 400 }}
+							rotationInterval={5000}
+						/>
 						<m.div
 							animate={{ opacity: 1, y: 0 }}
 							initial={{ opacity: 0, y: 20 }}
 							transition={{ duration: 0.8, delay: 0.4 }}
-							className="mt-8 flex items-center gap-x-6">
-							<Button className="hover:cursor-pointer">Action 1</Button>
-							<Button className="hover:cursor-pointer">Action 2</Button>
+							className="mt-6 flex items-center gap-x-6">
+							<Button className="hover:cursor-pointer" size="xl">
+								Action 1
+							</Button>
+							<Button className="hover:cursor-pointer" size="xl">
+								Action 2
+							</Button>
 						</m.div>
 					</m.div>
 
