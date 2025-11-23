@@ -1,6 +1,7 @@
 import type { ButtonVariantProps } from "@/utils/variants/components.ts";
 import type { ComponentProps, CSSProperties, ReactNode } from "react";
 import type { Icon } from "@phosphor-icons/react";
+import type { Easing } from "motion/react";
 
 export interface IGenericIconSvg {
 	size?: number;
@@ -107,7 +108,7 @@ export interface IBlurOnScrollProps {
 	 * Animation easing function
 	 * @default [0.25, 0.1, 0.25, 1.0] (cubic bezier)
 	 */
-	easing?: number[] | string;
+	easing?: Easing | Array<Easing>;
 
 	/**
 	 * Distance to move the element during animation in pixels
@@ -148,5 +149,6 @@ export interface ITechStackProps {
 
 export interface IButtonProps extends ComponentProps<"button">, ButtonVariantProps {
 	disableRipple?: boolean;
+	isLoading?: boolean;
 	asChild?: boolean;
 }

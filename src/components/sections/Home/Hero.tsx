@@ -9,7 +9,7 @@ import RotatingText from "@/components/ui/Animateds/RotatingText";
 
 export default function HeroSection(): ReactNode {
 	return (
-		<section id="About_Me" className="relative isolate overflow-hidden bg-background">
+		<section id="Hero" className="relative isolate overflow-hidden bg-background">
 			<BackgroundBeams>
 				<BlurOnScroll className="mx-auto max-w-7xl px-6 py-20 lg:flex items-center lg:gap-x-10 lg:px-8" transitionDuration={1.5}>
 					<m.div
@@ -28,21 +28,23 @@ export default function HeroSection(): ReactNode {
 							animate={{ opacity: 1, y: 0 }}
 							initial={{ opacity: 0, y: 20 }}
 							transition={{ duration: 0.8, delay: 0.2 }}
-							className="mt-4 text-lg leading-8 text-muted-foreground">
+							className="mt-2 text-lg leading-6 text-muted-foreground">
 							Where minimal design meets floral artistry. We craft elegant experiences that inspire and elevate your space.
+							<RotatingText
+								as="span"
+								texts={["React", "Bits", "Is", "Cool!"]}
+								mainClassName=""
+								staggerFrom={"last"}
+								initial={{ y: "100%" }}
+								animate={{ y: 0 }}
+								exit={{ y: "-120%" }}
+								staggerDuration={0.025}
+								splitLevelClassName="overflow-hidden pb-0.5 sm:pb-1 md:pb-1"
+								transition={{ type: "spring", damping: 30, stiffness: 400 }}
+								rotationInterval={7000}
+							/>
 						</m.p>
-						<RotatingText
-							texts={["React", "Bits", "Is", "Cool!"]}
-							mainClassName=""
-							staggerFrom={"last"}
-							initial={{ y: "100%" }}
-							animate={{ y: 0 }}
-							exit={{ y: "-120%" }}
-							staggerDuration={0.025}
-							splitLevelClassName="overflow-hidden pb-0.5 sm:pb-1 md:pb-1"
-							transition={{ type: "spring", damping: 30, stiffness: 400 }}
-							rotationInterval={5000}
-						/>
+
 						<m.div
 							animate={{ opacity: 1, y: 0 }}
 							initial={{ opacity: 0, y: 20 }}
@@ -65,6 +67,7 @@ export default function HeroSection(): ReactNode {
 						<Image
 							width={100}
 							height={100}
+							loading="eager"
 							src="/dudul.svg"
 							alt="Basic Doodle"
 							className="relative w-[500px] rounded-2xl shadow-xl ring-1 ring-gray-900/10"

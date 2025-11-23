@@ -1,4 +1,4 @@
-import type { RefCallback, RefObject } from "react";
+import type { RefCallback, RefObject, MouseEvent } from "react";
 
 /**
  * Options for the Intersection Observer API
@@ -141,4 +141,16 @@ export interface DevicePerformanceOptions {
 	domProcessingThreshold?: number;
 	/** Memory threshold in GB for low-end devices (default: 4) */
 	memoryThreshold?: number;
+}
+
+export interface RippleType {
+	id: number;
+	x: number;
+	y: number;
+}
+
+export interface UseRippleReturn {
+	createRipple: (event: MouseEvent<Element>) => void;
+	ripples: Array<RippleType>;
+	clearRipples: () => void;
 }

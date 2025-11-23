@@ -1,18 +1,11 @@
-"use client";
-
 import { buttonVariants } from "@/utils/variants/components.ts";
-import { useState, useCallback } from "react";
+import { useRipple } from "@/utils/hooks/useRipples";
 import { Slot } from "@radix-ui/react-slot";
 import { cn } from "@/utils/functions";
+import { useCallback } from "react";
 
 import type { IButtonProps } from "@/types/components";
 import type { ReactNode, MouseEvent } from "react";
-
-interface RippleType {
-	id: number;
-	x: number;
-	y: number;
-}
 
 /**
  * Button component that provides a flexible, accessible clickable element
@@ -56,31 +49,22 @@ interface RippleType {
  * @returns A button component with the specified styling, behavior, and ripple effect
  */
 export default function Button({
+	disableRipple = false,
+	isLoading = false,
+	asChild = false,
 	className,
 	variant,
-	size,
-	asChild = false,
-	disableRipple = false,
 	onClick,
+	size,
 	...props
 }: IButtonProps): ReactNode {
-	// State
-	const [ripples, setRipples] = useState<Array<RippleType>>([]);
+	// Hooks
+	const { ripples, createRipple } = useRipple(600);
 
 	// Component
 	const Comp = asChild ? Slot : "button";
 
 	// Callbacks
-	const createRipple = useCallback((event: MouseEvent<Element>): void => {
-		const button = event.currentTarget;
-		const rect = button.getBoundingClientRect();
-		const x = event.clientX - rect.left;
-		const y = event.clientY - rect.top;
-		const newRipple: RippleType = { id: Date.now() + Math.random(), x, y };
-		setRipples((prev) => [...prev, newRipple]);
-		setTimeout(() => setRipples((prev) => prev.filter((ripple) => ripple.id !== newRipple.id)), 600);
-	}, []);
-
 	const handleClick = useCallback(
 		(event: MouseEvent<HTMLButtonElement>): void => {
 			if (!disableRipple) createRipple(event as MouseEvent<Element>);
@@ -91,9 +75,10 @@ export default function Button({
 
 	return (
 		<Comp
-			data-slot="button"
-			onClick={handleClick}
 			className={cn(buttonVariants({ variant, size, className }), "relative overflow-hidden")}
+			onClick={handleClick}
+			disabled={isLoading}
+			data-slot="button"
 			{...props}>
 			{props.children}
 

@@ -217,7 +217,7 @@ export function FloatingSidebar({ items = defaultNavItems, defaultOpen = false, 
 				whileDrag={{ scale: 1.1, cursor: "grabbing", transition: { duration: 0 } }}
 				onClick={handleToggleClick}
 				className={cn(
-					"fixed z-[100] rounded-full p-3.5 shadow-2xl backdrop-blur-sm transition-colors duration-300 cursor-grab active:cursor-grabbing",
+					"fixed z-[100] rounded-full p-3 mt-10 shadow-2xl backdrop-blur-sm transition-colors duration-300 cursor-grab active:cursor-grabbing",
 					"bg-gradient-to-br from-black to-gray-900 border border-gray-800/50",
 					"hover:border-blue-500/30 hover:shadow-blue-500/20 hover:shadow-xl",
 					"hidden md:flex items-center justify-center",
