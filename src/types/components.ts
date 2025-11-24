@@ -152,3 +152,19 @@ export interface IButtonProps extends ComponentProps<"button">, ButtonVariantPro
 	isLoading?: boolean;
 	asChild?: boolean;
 }
+
+export interface BalatroProps {
+	mouseInteraction?: boolean;
+	offset?: [number, number];
+	spinRotation?: number;
+	pixelFilter?: number;
+	spinAmount?: number;
+	isRotate?: boolean;
+	spinSpeed?: number;
+	contrast?: number;
+	lighting?: number;
+	spinEase?: number;
+	color1?: string;
+	color2?: string;
+	color3?: string;
+}
