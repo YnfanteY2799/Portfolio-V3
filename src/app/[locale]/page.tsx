@@ -14,7 +14,7 @@ import type { ReactNode } from "react";
 
 export default function Home(): ReactNode {
 	return (
-		<>
+		<main role="main" className="min-h-screen bg-background">
 			<Navbar />
 			<FloatingSidebar />
 			<HeroSection />
@@ -24,7 +24,6 @@ export default function Home(): ReactNode {
 			{/* <ProjectSection /> */}
 			{/* <TestimonialsSection /> */}
 			<ContactMeSection />
-			
-		</>
+		</main>
 	);
 }

@@ -18,7 +18,7 @@ export default function AboutSection({ attributes = default_attributes }: IAbout
 				transition={{ duration: 0.8, type: "spring", stiffness: 100 }}>
 				<h2 className="text-5xl md:text-6xl font-bold font-playfair text-foreground mb-6">About Me</h2>
 				<p className="text-lg text-muted-foreground max-w-4xl mx-auto leading-relaxed">
-					I'm a passionate full-stack developer with over 5 years of experience creating digital experiences that combine beautiful design with
+					I'm a passionate full-stack developer with over 8 years of experience creating digital experiences that combine beautiful design with
 					robust functionality. I specialize in React, Node.js, and modern web technologies, always striving to write clean, efficient code that
 					makes a difference.
 				</p>

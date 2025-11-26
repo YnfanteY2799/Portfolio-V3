@@ -1,5 +1,5 @@
 import { buttonVariants } from "@/utils/variants/components.ts";
-import { useRipple } from "@/utils/hooks/useRipples";
+import useRipple from "@/utils/hooks/useRipples";
 import { Slot } from "@radix-ui/react-slot";
 import { cn } from "@/utils/functions";
 import { useCallback } from "react";

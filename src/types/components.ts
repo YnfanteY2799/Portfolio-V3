@@ -168,3 +168,9 @@ export interface BalatroProps {
 	color2?: string;
 	color3?: string;
 }
+
+
+
+// Tilt Base Wrapper
+
+

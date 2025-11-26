@@ -186,7 +186,7 @@ const BlurOnScrollInner = memo(function BlurOnScroll<T extends ElementType = "di
 
 	// Use m(Component) for Framer Motion animation
 
-	const MotionComponent = useMemo(() => m(Component), [Component]);
+	const MotionComponent = useMemo(() => m.create(Component), [Component]);
 
 	return typeof window === "undefined" ? (
 		<Component id={id} ref={castedRef} className={cn(className)} style={combinedStyle} {...props}>

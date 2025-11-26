@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { locales } from "@/i18n/routing";
 import { cn } from "@/utils/functions";
 import { hasLocale } from "next-intl";
-import { fonts } from "@/fonts";
+// import { fonts } from "@/fonts";
 import "@/css/globals.css";
 
 import type { ReactNode } from "react";
@@ -25,7 +25,7 @@ export default async function RootLayout({ children, params }: Readonly<ITRSC>):
 			<head>
 				<script crossOrigin="anonymous" src="//unpkg.com/react-scan/dist/auto.global.js" />
 			</head>
-			<body className={cn(fonts, `antialiased`)}>
+			<body className={cn("", `antialiased`)}>
 				<AppProvider>{children}</AppProvider>
 			</body>
 		</html>

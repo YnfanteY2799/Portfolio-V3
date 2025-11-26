@@ -1,9 +1,12 @@
 "use client";
-import { m, useMotionValue, useSpring, useTransform } from "motion/react";
-import { type ReactNode, type MouseEvent, type ElementType, type ComponentPropsWithoutRef, useRef, useState, useCallback, useMemo } from "react";
+import { m, useMotionValue, useSpring, useTransform, useMotionTemplate } from "motion/react";
+import useMergeRefs from "@/utils/hooks/useMergeRefs";
+import useRipple from "@/utils/hooks/useRipples";
+import { useRef, useCallback } from "react";
 import { cn } from "@/utils/functions";
 
-// Polymorphic type utilities (unchanged)
+import type { ReactNode, MouseEvent, ElementType, ComponentPropsWithoutRef, KeyboardEvent } from "react";
+
 type AsProp<C extends ElementType> = {
 	as?: C;
 };
@@ -22,34 +25,27 @@ type PolymorphicComponentPropWithRef<C extends ElementType, Props = object> = Po
 
 // Component props
 interface TiltCardOwnProps {
+	containerClassName?: string;
+	glareMaxOpacity?: number;
+	disableRipple?: boolean;
+	rippleDuration?: number;
+	shadowEnable?: boolean;
+	glareEnable?: boolean;
+	tiltReverse?: boolean;
+	tiltMaxAngle?: number;
+	borderRadius?: string;
+	rippleColor?: string;
+	onClick?: () => void;
+	glareColor?: string;
 	children: ReactNode;
 	className?: string;
-	containerClassName?: string;
-	tiltMaxAngle?: number;
-	tiltReverse?: boolean;
-	scale?: number;
-	glareEnable?: boolean;
-	glareMaxOpacity?: number;
-	glareColor?: string;
-	shadowEnable?: boolean;
-	rippleColor?: string;
-	rippleDuration?: number;
-	borderRadius?: string;
-	onClick?: () => void;
 	disabled?: boolean;
+	scale?: number;
 }
 
 export type TiltCardProps<C extends ElementType = "div"> = PolymorphicComponentPropWithRef<C, TiltCardOwnProps>;
 
-interface RippleEffect {
-	x: number;
-	y: number;
-	id: number;
-}
-
-const DEFAULT_ELEMENT = "div" as const;
-
-export default function TiltCard<C extends ElementType = typeof DEFAULT_ELEMENT>({
+export default function TiltCard<C extends ElementType = "div">({
 	as,
 	children,
 	className,
@@ -61,6 +57,7 @@ export default function TiltCard<C extends ElementType = typeof DEFAULT_ELEMENT>
 	glareMaxOpacity = 0.3,
 	glareColor = "#ffffff",
 	shadowEnable = true,
+	disableRipple = false,
 	rippleColor = "rgba(255, 255, 255, 0.6)",
 	rippleDuration = 600,
 	borderRadius = "var(--radius-lg)",
@@ -69,9 +66,12 @@ export default function TiltCard<C extends ElementType = typeof DEFAULT_ELEMENT>
 	ref,
 	...restProps
 }: TiltCardProps<C>): ReactNode {
-	const Component = as || DEFAULT_ELEMENT;
+	const Component = as || "div";
 	const internalRef = useRef<HTMLElement>(null);
-	const [ripples, setRipples] = useState<RippleEffect[]>([]);
+
+	const { ripples, createRipple } = useRipple(600);
+
+	const mergedRefs = useMergeRefs(internalRef, ref);
 
 	// Motion values
 	const x = useMotionValue(0);
@@ -80,22 +80,32 @@ export default function TiltCard<C extends ElementType = typeof DEFAULT_ELEMENT>
 	const mouseXSpring = useSpring(x, { stiffness: 150, damping: 15, mass: 0.1 });
 	const mouseYSpring = useSpring(y, { stiffness: 150, damping: 15, mass: 0.1 });
 
-	// FIX: useTransform must be called at top level — no longer inside useMemo!
-	const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], tiltReverse ? [tiltMaxAngle, -tiltMaxAngle] : [-tiltMaxAngle, tiltMaxAngle]);
+	// Transform values for rotation
+	const rotateX = useTransform(
+		mouseYSpring,
+		[-0.5, 0.5],
+		tiltReverse ? [`${tiltMaxAngle}deg`, `-${tiltMaxAngle}deg`] : [`-${tiltMaxAngle}deg`, `${tiltMaxAngle}deg`]
+	);
 
-	const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], tiltReverse ? [-tiltMaxAngle, tiltMaxAngle] : [tiltMaxAngle, -tiltMaxAngle]);
+	const rotateY = useTransform(
+		mouseXSpring,
+		[-0.5, 0.5],
+		tiltReverse ? [`-${tiltMaxAngle}deg`, `${tiltMaxAngle}deg`] : [`${tiltMaxAngle}deg`, `-${tiltMaxAngle}deg`]
+	);
 
-	const glareX = useTransform(mouseXSpring, [-0.5, 0.5], [0, 100]);
-	const glareY = useTransform(mouseYSpring, [-0.5, 0.5], [0, 100]);
+	// Glare position values
+	const glareX = useTransform(mouseXSpring, [-0.5, 0.5], ["0%", "100%"]);
+	const glareY = useTransform(mouseYSpring, [-0.5, 0.5], ["0%", "100%"]);
+
+	// Glare background using useMotionTemplate
+	const glareBackground = useMotionTemplate`radial-gradient(circle at ${glareX} ${glareY}, ${glareColor} 0%, transparent 70%)`;
 
 	const handleMouseMove = useCallback(
-		(e: MouseEvent<HTMLElement>) => {
+		({ clientX, clientY }: MouseEvent<HTMLElement>) => {
 			if (disabled || !internalRef.current) return;
-
 			const rect = internalRef.current.getBoundingClientRect();
-			const xPct = (e.clientX - rect.left) / rect.width - 0.5;
-			const yPct = (e.clientY - rect.top) / rect.height - 0.5;
-
+			const xPct = (clientX - rect.left) / rect.width - 0.5;
+			const yPct = (clientY - rect.top) / rect.height - 0.5;
 			x.set(xPct);
 			y.set(yPct);
 		},
@@ -107,97 +117,68 @@ export default function TiltCard<C extends ElementType = typeof DEFAULT_ELEMENT>
 		y.set(0);
 	}, [x, y]);
 
-	const handleClick = useCallback(
-		(e: MouseEvent<HTMLElement>) => {
-			if (disabled) return;
-
-			const rect = e.currentTarget.getBoundingClientRect();
-			const newRipple: RippleEffect = {
-				x: e.clientX - rect.left,
-				y: e.clientY - rect.top,
-				id: Date.now(),
-			};
-
-			setRipples((prev) => [...prev, newRipple]);
-
-			setTimeout(() => {
-				setRipples((prev) => prev.filter((ripple) => ripple.id !== newRipple.id));
-			}, rippleDuration);
-		},
-		[disabled, rippleDuration]
-	);
-
 	const onClickCombined = useCallback(
 		(e: MouseEvent<HTMLElement>) => {
-			handleClick(e);
+			if (!disableRipple) createRipple(e as MouseEvent<Element>);
 			onClick?.();
 		},
-		[handleClick, onClick]
+		[onClick]
+	);
+
+	// Keyboard accessibility
+	const handleKeyDown = useCallback(
+		(e: KeyboardEvent<HTMLElement>) => {
+			if (disabled) return;
+			if (e.key === "Enter" || e.key === " ") {
+				e.preventDefault();
+				onClick?.();
+			}
+		},
+		[disabled, onClick]
 	);
 
 	return (
-		<div className={cn("inline-block perspective-[1000px]", containerClassName)}>
+		<div className={cn("inline-block [perspective:1000px]", containerClassName)}>
 			<m.div
 				{...restProps}
-				ref={(node) => {
-					internalRef.current = node;
-					if (typeof ref === "function") {
-						ref(node);
-					} else if (ref) {
-						ref.current = node;
-					}
-				}}
+				ref={mergedRefs}
+				onClick={onClickCombined}
+				onKeyDown={handleKeyDown}
 				onMouseMove={handleMouseMove}
 				onMouseLeave={handleMouseLeave}
-				onClick={onClickCombined}
-				style={{
-					rotateX,
-					rotateY,
-					transformStyle: "preserve-3d",
-					borderRadius,
-				}}
+				role={onClick ? "button" : undefined}
+				style={{ rotateX, rotateY, borderRadius }}
 				whileHover={disabled ? undefined : { scale }}
+				tabIndex={onClick && !disabled ? 0 : undefined}
 				whileTap={disabled ? undefined : { scale: scale * 0.95 }}
 				transition={{ type: "spring", stiffness: 260, damping: 20 }}
 				className={cn(
-					"relative overflow-hidden",
+					"relative overflow-hidden [transform-style:preserve-3d]",
 					shadowEnable && "shadow-lg hover:shadow-2xl transition-shadow duration-300",
-					!disabled && "cursor-pointer",
 					disabled && "opacity-50 cursor-not-allowed",
+					!disabled && "cursor-pointer",
 					className
 				)}>
 				{/* Content */}
-				<Component className="relative z-10" style={{ transform: "translateZ(20px)" }}>
-					{children}
-				</Component>
+				<Component className="relative z-10 [transform:translateZ(20px)]">{children}</Component>
 
 				{/* Glare effect */}
 				{glareEnable && !disabled && (
 					<m.div
-						className="absolute inset-0 pointer-events-none z-20"
-						style={{
-							background: `radial-gradient(circle at ${glareX}% ${glareY}%, ${glareColor} 0%, transparent 70%)`,
-							opacity: glareMaxOpacity,
-							mixBlendMode: "overlay",
-							borderRadius,
-						}}
+						className="absolute inset-0 pointer-events-none z-20 mix-blend-overlay"
+						style={{ background: glareBackground, opacity: glareMaxOpacity, borderRadius }}
 					/>
 				)}
 
 				{/* Ripple effects */}
-				{ripples.map(({ x, y, id }) => (
+				{ripples.map(({ x: left, y: top, id }) => (
 					<m.span
 						key={id}
 						initial={{ width: 0, height: 0, opacity: 1 }}
+						style={{ left, top, background: rippleColor }}
 						animate={{ width: 500, height: 500, opacity: 0 }}
-						className="absolute z-30 pointer-events-none rounded-full"
 						transition={{ duration: rippleDuration / 1000, ease: "easeOut" }}
-						style={{
-							left: x,
-							top: y,
-							background: rippleColor,
-							transform: "translate(-50%, -50%)",
-						}}
+						className="absolute z-30 pointer-events-none rounded-full -translate-x-1/2 -translate-y-1/2"
 					/>
 				))}
 			</m.div>

@@ -39,7 +39,7 @@ import type { RippleType, UseRippleReturn } from "@/types/hooks";
  * }
  * ```
  */
-export function useRipple(d: number = 600): UseRippleReturn {
+export default function useRipple(d: number = 600): UseRippleReturn {
 	/**
 	 * Array of currently active ripple effects.
 	 * Each ripple contains a unique id and x/y coordinates.

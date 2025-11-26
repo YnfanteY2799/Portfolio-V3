@@ -17,10 +17,10 @@ export default function BackgroundBeams({ className = "", children, fullScreen =
 		<>
 			<div className={containerClasses}>
 				<svg
+					fill="none"
 					width="100%"
 					height="100%"
 					viewBox="0 0 696 316"
-					fill="none"
 					xmlns="http://www.w3.org/2000/svg"
 					preserveAspectRatio="xMidYMid slice">
 					<path

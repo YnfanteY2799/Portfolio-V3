@@ -6,10 +6,11 @@ import { type ReactNode } from "react";
 import { m } from "motion/react";
 import Image from "next/image";
 import RotatingText from "@/components/ui/Animateds/RotatingText";
+import CVDownloadModal from "@/components/modals/NonValid_CVDownload";
 
 export default function HeroSection(): ReactNode {
 	return (
-		<section id="Hero" className="relative isolate overflow-hidden bg-background">
+		<section id="Hero" className="relative isolate overflow-hidden">
 			<BackgroundBeams>
 				<BlurOnScroll className="mx-auto max-w-7xl px-6 py-20 lg:flex items-center lg:gap-x-10 lg:px-8" transitionDuration={1.5}>
 					<m.div
