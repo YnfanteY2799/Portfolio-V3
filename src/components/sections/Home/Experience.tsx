@@ -1,9 +1,9 @@
 "use client";
 import { Calendar, MapPin, Award, TrendingUp, Filter, Briefcase, GraduationCap } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/Cards";
 import { motion, AnimatePresence } from "framer-motion";
-import Badge from "@/components/ui/badge";
-import Button from "@/components/ui/button";
+import Badge from "@/components/ui/Badge";
+import Button from "@/components/ui/Button";
 import { useState } from "react";
 
 const experiences = [

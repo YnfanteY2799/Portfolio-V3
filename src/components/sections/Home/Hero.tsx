@@ -1,7 +1,7 @@
 "use client";
 import BackgroundBeams from "@/components/ui/backgrounds/beams";
 import BlurOnScroll from "@/components/ui/HOC/BlurOnScroll";
-import Button from "@/components/ui/button";
+import Button from "@/components/ui/Button/index";
 import { type ReactNode } from "react";
 import { m } from "motion/react";
 import Image from "next/image";

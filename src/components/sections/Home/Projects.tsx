@@ -1,10 +1,10 @@
 "use client";
 import { ExternalLink, Github, Search, X, SortAsc, Sparkles, Grid, List } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/Cards";
 import { m as motion, AnimatePresence } from "motion/react";
-import Button from "@/components/ui/button";
+import Button from "@/components/ui/Button/index.tsx";
 import { useState, useMemo } from "react";
-import Badge from "@/components/ui/badge";
+import Badge from "@/components/ui/Badge";
 import Input from "@/components/ui/input";
 import { cn } from "@/utils/functions";
 import BlurOnScroll from "@/components/ui/HOC/BlurOnScroll";

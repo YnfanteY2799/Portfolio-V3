@@ -1,4 +1,6 @@
-export const TestimonialsTransitionVariants = {
+import { Transition } from "motion";
+
+export const TestimonialsTransitionVariants: Transition = {
 	x: { type: "spring", stiffness: 300, damping: 30 },
 	rotateY: { duration: 0.4 },
 	opacity: { duration: 0.2 },

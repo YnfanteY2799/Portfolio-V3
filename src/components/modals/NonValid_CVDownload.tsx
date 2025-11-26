@@ -3,10 +3,10 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { X, Download, FileText, Eye, Share2, ChevronLeft } from "lucide-react";
-import Button from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import Button from "@/components/ui/Button";
+import { Card, CardContent } from "@/components/ui/Cards";
 // import CVPreview from "@/components/cv-preview";
-import Badge from "@/components/ui/badge";
+import Badge from "@/components/ui/Badge";
 
 interface CVDownloadModalProps {
 	isOpen: boolean;

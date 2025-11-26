@@ -2,7 +2,7 @@ import { m } from "motion/react";
 
 import type { ITechCardProps } from "@/types/components";
 import type { ReactNode } from "react";
-import { Card, CardContent } from "../card";
+import { Card, CardContent } from "../Cards/index.tsx";
 import { cn } from "@/utils/functions";
 
 export default function TechCards({ name, color, category, description, Icon, proficiency, idx }: ITechCardProps): ReactNode {

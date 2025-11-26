@@ -20,9 +20,9 @@ import {
 	Globe,
 	ArrowRight,
 } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
-import Button from "@/components/ui/button";
-import Badge from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/Cards";
+import Button from "@/components/ui/Button";
+import Badge from "@/components/ui/Badge";
 
 export default function ContactMeSection(): ReactNode {
 	const [formData, setFormData] = useState({

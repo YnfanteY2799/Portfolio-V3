@@ -1,5 +1,5 @@
 "use client";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/Cards";
 import { m } from "motion/react";
 
 import type { IAboutCardProps } from "@/types/components.ts";

@@ -1,10 +1,10 @@
 "use client";
 import { ChevronLeft, ChevronRight, Star, Quote, Play, Pause, RotateCcw } from "lucide-react";
 import { useState, useEffect, useCallback } from "react";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/Cards";
 import { motion, AnimatePresence } from "framer-motion";
-import Button from "@/components/ui/button";
-import Badge from "@/components/ui/badge";
+import Button from "@/components/ui/Button";
+import Badge from "@/components/ui/Badge";
 import Image from "next/image";
 import { TestimonialsSlideVariants, TestimonialsTransitionVariants } from "@/utils/variants";
 

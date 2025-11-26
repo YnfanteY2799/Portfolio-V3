@@ -1,10 +1,10 @@
 "use client";
 import { GitCommit, Star, Filter, TrendingUp, Code, Activity, Eye, GitFork, ExternalLink, Loader2, Calendar, AlertCircle } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/Cards";
 import { motion, AnimatePresence } from "motion/react";
 import { useState, useEffect, useMemo } from "react";
-import Button from "@/components/ui/button";
-import Badge from "@/components/ui/badge";
+import Button from "@/components/ui/Button";
+import Badge from "@/components/ui/Badge";
 
 // Enhanced GitHub API integration with proper types
 interface GitHubRepo {
