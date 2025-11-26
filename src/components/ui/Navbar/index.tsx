@@ -7,6 +7,7 @@ import Link from "next/link";
 import { ReactNode, useMemo } from "react";
 
 export default function Navbar(): ReactNode {
+	// Hooks
 	const { scrollStarted } = useScroll({ scrollThreshold: 5, useRaf: true });
 	const prefersReducedMotion = useReducedMotion();
 
@@ -35,7 +36,6 @@ export default function Navbar(): ReactNode {
 					<nav className="hidden md:flex items-center space-x-8"></nav>
 					<div className="hidden md:flex items-center space-x-3">
 						<CVDownloadModal />
-						
 					</div>
 				</div>
 			</m.header>
