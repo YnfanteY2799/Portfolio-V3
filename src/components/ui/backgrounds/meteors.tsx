@@ -1,10 +1,9 @@
-"use client";
+import { memo, type ReactNode } from "react";
 import { cn } from "@/utils/functions";
 
-import type { ICRSC } from "@/types/index";
-import type { ReactNode } from "react";
+import type { IBackgroundMeteorsProps } from "@/types/components";
 
-export default function Meteors({ number = 20, className }: ICRSC & { number?: number }): ReactNode {
+export default memo(function BackgroundMeteors({ number = 20, className }: IBackgroundMeteorsProps): ReactNode {
 	return new Array(number).fill(true).map((_, idx) => (
 		<span
 			key={"meteor" + idx}
@@ -21,4 +20,4 @@ export default function Meteors({ number = 20, className }: ICRSC & { number?: n
 			}}
 		/>
 	));
-}
+});

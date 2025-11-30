@@ -302,6 +302,7 @@ const InteractiveModalContent = React.forwardRef<React.ElementRef<typeof DialogP
 									!isMobile && "rounded-lg border border-gray-200",
 									!isMobile && sizeStyles[size],
 									isMobile && !isFullscreen && "max-h-[85vh]",
+									!isMobile && scrollable && "max-h-[90vh]", // Add this line
 									scrollable && "flex flex-col",
 									className
 								)}>

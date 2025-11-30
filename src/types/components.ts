@@ -2,6 +2,7 @@ import type { ButtonVariantProps } from "@/utils/variants/components.ts";
 import type { ComponentProps, CSSProperties, ReactNode } from "react";
 import type { Icon } from "@phosphor-icons/react";
 import type { Easing } from "motion/react";
+import type { ICRSC } from "./index.ts";
 
 export interface IGenericIconSvg {
 	size?: number;
@@ -169,8 +170,12 @@ export interface BalatroProps {
 	color3?: string;
 }
 
+export interface IBackgroundMeteorsProps extends ICRSC {
+	number?: number;
+}
 
+export interface IBackgroundBeamsProps extends ICRSC {
+	fullScreen?: boolean;
+}
 
 // Tilt Base Wrapper
-
-

@@ -1,12 +1,12 @@
 "use client";
 import { beansPaths } from "@/utils/constants/paths";
 import { cn } from "@/utils/functions";
-import { motion } from "motion/react";
+import { m } from "motion/react";
 
-import type { ICRSC } from "@/types/index";
+import type { IBackgroundBeamsProps } from "@/types/components";
 import type { ReactNode } from "react";
 
-export default function BackgroundBeams({ className = "", children, fullScreen = false }: ICRSC & { fullScreen?: boolean }): ReactNode {
+export default function BackgroundBeams({ className = "", children, fullScreen = false }: IBackgroundBeamsProps): ReactNode {
 	const containerClasses = cn(
 		"z-0 absolute inset-0 flex items-center justify-center overflow-hidden",
 		fullScreen ? "fixed h-screen w-screen" : "h-full w-full",
@@ -30,41 +30,31 @@ export default function BackgroundBeams({ className = "", children, fullScreen =
 						strokeWidth="0.5"
 					/>
 					{beansPaths.map((path, index) => (
-						<motion.path d={path} key={index} strokeWidth="0.7" strokeOpacity="0.4" stroke={`url(#linearGradient-${index})`} />
+						<m.path d={path} key={index} strokeWidth="0.7" strokeOpacity="0.4" stroke={`url(#linearGradient-${index})`} />
 					))}
 					<defs>
 						{beansPaths.map((_, index) => (
-							<motion.linearGradient
+							<m.linearGradient
 								x1="100%"
 								x2="100%"
 								y1="100%"
 								y2="100%"
 								key={`gradient-${index}`}
 								id={`linearGradient-${index}`}
-								animate={{
-									x2: ["0%", "95%"],
-									x1: ["0%", "100%"],
-									y1: ["0%", "100%"],
-									y2: ["0%", `${93 + Math.random() * 8}%`],
-								}}
-								transition={{
-									repeat: Infinity,
-									ease: "easeInOut",
-									delay: Math.random() * 10,
-									duration: Math.random() * 10 + 10,
-								}}>
+								animate={{ x2: ["0%", "95%"], x1: ["0%", "100%"], y1: ["0%", "100%"], y2: ["0%", `${93 + Math.random() * 8}%`] }}
+								transition={{ repeat: Infinity, ease: "easeInOut", delay: Math.random() * 10, duration: Math.random() * 10 + 10 }}>
 								<stop stopColor="#18CCFC" stopOpacity="0" />
 								<stop stopColor="#18CCFC" />
 								<stop offset="32.5%" stopColor="#6344F5" />
 								<stop offset="100%" stopColor="#AE48FF" stopOpacity="0" />
-							</motion.linearGradient>
+							</m.linearGradient>
 						))}
 
 						<radialGradient
-							id="paint0_radial_242_278"
+							r="1"
 							cx="0"
 							cy="0"
-							r="1"
+							id="paint0_radial_242_278"
 							gradientUnits="userSpaceOnUse"
 							gradientTransform="translate(352 34) rotate(90) scale(555 1560.62)">
 							<stop offset="0.0666667" stopColor="#737373" />

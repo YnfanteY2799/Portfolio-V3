@@ -17,24 +17,31 @@ export default function CVDownloadModal(): ReactNode {
 		<InteractiveModal>
 			<InteractiveModalTrigger asChild>
 				<Button variant="outline" className="w-full bg-transparent">
-					Default Modal
+					Scrollable Content
 				</Button>
 			</InteractiveModalTrigger>
-			<InteractiveModalContent backdrop="blur">
+			<InteractiveModalContent size="2xl" scrollable>
 				<InteractiveModalHeader>
-					<InteractiveModalTitle>Default Modal</InteractiveModalTitle>
-					<InteractiveModalDescription>This is a standard modal with smooth slide animations.</InteractiveModalDescription>
+					<InteractiveModalTitle>Scrollable Modal</InteractiveModalTitle>
+					<InteractiveModalDescription>Only the content area scrolls, header and footer stay fixed.</InteractiveModalDescription>
 				</InteractiveModalHeader>
 				<InteractiveModalBody>
-					<p className="text-sm">
-						This modal features smooth Framer Motion animations. On mobile, you can drag it up to go fullscreen or drag down to dismiss.
-					</p>
+					<div className="space-y-4">
+						{Array.from({ length: 300 }).map((_, i) => (
+							<div key={i} className="p-4 bg-muted rounded-lg">
+								<h3 className="font-semibold mb-2">Section {i + 1}</h3>
+								<p className="text-sm text-muted-foreground">
+									This is scrollable content. Notice how the header and footer remain fixed while you scroll through this content area.
+								</p>
+							</div>
+						))}
+					</div>
 				</InteractiveModalBody>
 				<InteractiveModalFooter>
 					<InteractiveModalClose asChild>
 						<Button variant="outline">Close</Button>
 					</InteractiveModalClose>
-					<Button>Save Changes</Button>
+					<Button>Accept</Button>
 				</InteractiveModalFooter>
 			</InteractiveModalContent>
 		</InteractiveModal>
