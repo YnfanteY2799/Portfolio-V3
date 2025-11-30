@@ -16,6 +16,7 @@ export default function CVDownloadModal(): ReactNode {
 	return (
 		<InteractiveModal>
 			<InteractiveModalTrigger asChild>
+				{/* Trigger */}
 				<Button variant="outline" className="w-full bg-transparent">
 					Scrollable Content
 				</Button>

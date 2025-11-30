@@ -24,7 +24,7 @@ export default function Navbar(): ReactNode {
 	return (
 		<LazyMotion features={domAnimation} strict>
 			<m.header animate={{ y: 0 }} transition={{ duration: 0.5 }} initial={{ y: prefersReducedMotion ? 0 : -100 }} className={className}>
-				<div className="container flex items-center justify-between my-1 mx-4">
+				<div className="container flex justify-between my-1 mx-4">
 					<Link href="/Home" className="flex items-center space-x-2">
 						<m.div
 							whileTap={{ scale: 0.95, transition: { duration: 0.1 } }}
@@ -33,11 +33,11 @@ export default function Navbar(): ReactNode {
 							LOG
 						</m.div>
 					</Link>
-					<nav className="hidden md:flex items-center space-x-8">
-						<div></div>
-						<div></div>
-						<div></div>
-						<div></div>
+					<nav className="hidden md:flex items-center space-x-6">
+						<div>X</div>
+						<div>a</div>
+						<div>n</div>
+						<div>c</div>
 					</nav>
 					<div className="hidden md:flex items-center space-x-3">
 						<CVDownloadModal />

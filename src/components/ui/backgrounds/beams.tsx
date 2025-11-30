@@ -1,12 +1,12 @@
 "use client";
+import { domAnimation, LazyMotion, m } from "motion/react";
 import { beansPaths } from "@/utils/constants/paths";
+import { memo, type ReactNode } from "react";
 import { cn } from "@/utils/functions";
-import { m } from "motion/react";
 
 import type { IBackgroundBeamsProps } from "@/types/components";
-import type { ReactNode } from "react";
 
-export default function BackgroundBeams({ className = "", children, fullScreen = false }: IBackgroundBeamsProps): ReactNode {
+export default memo(function BackgroundBeams({ className = "", children, fullScreen = false }: IBackgroundBeamsProps): ReactNode {
 	const containerClasses = cn(
 		"z-0 absolute inset-0 flex items-center justify-center overflow-hidden",
 		fullScreen ? "fixed h-screen w-screen" : "h-full w-full",
@@ -14,7 +14,7 @@ export default function BackgroundBeams({ className = "", children, fullScreen =
 	);
 
 	return (
-		<>
+		<LazyMotion features={domAnimation} strict>
 			<div className={containerClasses}>
 				<svg
 					fill="none"
@@ -65,6 +65,6 @@ export default function BackgroundBeams({ className = "", children, fullScreen =
 				</svg>
 			</div>
 			{children && <div className="z-10 relative">{children}</div>}
-		</>
+		</LazyMotion>
 	);
-}
+});
