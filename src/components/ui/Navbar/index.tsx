@@ -33,13 +33,13 @@ export default function Navbar(): ReactNode {
 							LOG
 						</m.div>
 					</Link>
-					<nav className="hidden md:flex items-center space-x-6">
+					<nav className="hidden md:flex items-center space-x-6 mx-auto">
 						<div>X</div>
 						<div>a</div>
 						<div>n</div>
 						<div>c</div>
 					</nav>
-					<div className="hidden md:flex items-center space-x-3">
+					<div className="hidden md:flex items-center space-x-3 ml-auto">
 						<CVDownloadModal />
 					</div>
 				</div>

@@ -1,7 +1,9 @@
 "use client";
 import { memo, useEffect, useRef, type ReactNode } from "react";
 import { Renderer, Program, Mesh, Triangle } from "ogl";
-import { hexToVec4 } from "@/utils/functions/index.ts";
+import { hexToVec4 } from "@/utils/functions";
+
+
 
 export interface BalatroProps {
 	mouseInteraction?: boolean;

@@ -1,16 +1,39 @@
 "use client";
 import { domAnimation, LazyMotion, m } from "motion/react";
+import { type ReactNode, memo, useMemo, forwardRef, type ElementType } from "react";
 import { beansPaths } from "@/utils/constants/paths";
-import { memo, type ReactNode } from "react";
 import { cn } from "@/utils/functions";
 
 import type { IBackgroundBeamsProps } from "@/types/components";
 
-export default memo(function BackgroundBeams({ className = "", children, fullScreen = false }: IBackgroundBeamsProps): ReactNode {
-	const containerClasses = cn(
-		"z-0 absolute inset-0 flex items-center justify-center overflow-hidden",
-		fullScreen ? "fixed h-screen w-screen" : "h-full w-full",
-		className
+type PolymorphicAsProp<E extends ElementType> = {
+	as?: E;
+};
+
+type PolymorphicProps<E extends ElementType> = PolymorphicAsProp<E> & Omit<React.ComponentPropsWithoutRef<E>, keyof PolymorphicAsProp<E>>;
+
+type BackgroundBeamsOwnProps = Omit<IBackgroundBeamsProps, "children"> & {
+	children?: ReactNode;
+};
+
+type BackgroundBeamsProps<E extends ElementType = "div"> = BackgroundBeamsOwnProps & PolymorphicProps<E>;
+
+type PolymorphicComponentProps<E extends ElementType, P> = P & PolymorphicProps<E>;
+
+const BackgroundBeamsInner = <E extends ElementType = "div">(
+	{ className = "", children, fullScreen = false, as, ...restProps }: PolymorphicComponentProps<E, BackgroundBeamsOwnProps>,
+	ref: React.Ref<Element>
+) => {
+	const Component = (as || "div") as ElementType;
+
+	const containerClasses = useMemo(
+		() =>
+			cn(
+				"z-0 absolute inset-0 flex items-center justify-center overflow-hidden",
+				fullScreen ? "fixed h-screen w-screen" : "h-full w-full",
+				className
+			),
+		[fullScreen, className]
 	);
 
 	return (
@@ -33,14 +56,14 @@ export default memo(function BackgroundBeams({ className = "", children, fullScr
 						<m.path d={path} key={index} strokeWidth="0.7" strokeOpacity="0.4" stroke={`url(#linearGradient-${index})`} />
 					))}
 					<defs>
-						{beansPaths.map((_, index) => (
+						{beansPaths.map((_, idx) => (
 							<m.linearGradient
 								x1="100%"
 								x2="100%"
 								y1="100%"
 								y2="100%"
-								key={`gradient-${index}`}
-								id={`linearGradient-${index}`}
+								key={`gradient-${idx}`}
+								id={`linearGradient-${idx}`}
 								animate={{ x2: ["0%", "95%"], x1: ["0%", "100%"], y1: ["0%", "100%"], y2: ["0%", `${93 + Math.random() * 8}%`] }}
 								transition={{ repeat: Infinity, ease: "easeInOut", delay: Math.random() * 10, duration: Math.random() * 10 + 10 }}>
 								<stop stopColor="#18CCFC" stopOpacity="0" />
@@ -64,7 +87,16 @@ export default memo(function BackgroundBeams({ className = "", children, fullScr
 					</defs>
 				</svg>
 			</div>
-			{children && <div className="z-10 relative">{children}</div>}
+			{children && (
+				<Component ref={ref} className="z-10 relative" {...restProps}>
+					{children}
+				</Component>
+			)}
 		</LazyMotion>
 	);
-});
+};
+
+// Type assertion for proper polymorphic behavior
+export default memo(forwardRef(BackgroundBeamsInner)) as <E extends ElementType = "div">(
+	props: PolymorphicComponentProps<E, BackgroundBeamsOwnProps> & { ref?: React.Ref<Element> }
+) => ReactNode;

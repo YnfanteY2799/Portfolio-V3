@@ -1,11 +1,12 @@
 "use client";
 import RotatingText from "@/components/ui/Animateds/RotatingText";
-import BackgroundBeams from "@/components/ui/backgrounds/beams";
+import BackgroundBeams from "@/components/ui/Backgrounds/beams";
 import BlurOnScroll from "@/components/ui/HOC/BlurOnScroll";
-import Button from "@/components/ui/Button/index";
-import { type ReactNode } from "react";
+import Button from "@/components/ui/Button";
 import { m } from "motion/react";
 import Image from "next/image";
+
+import type { ReactNode } from "react";
 
 export default function HeroSection(): ReactNode {
 	return (

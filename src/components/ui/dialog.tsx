@@ -6,8 +6,8 @@ import { X } from "lucide-react";
 import { m as motion, type PanInfo, useMotionValue, useTransform, Variants } from "framer-motion";
 import { cn } from "@/utils/functions";
 
-type BackdropVariant = "opaque" | "blur" | "transparent";
 type SizeVariant = "default" | "large" | "xl" | "2xl" | "3xl" | "4xl";
+type BackdropVariant = "opaque" | "blur" | "transparent";
 type PositionVariant = "center" | "top" | "bottom";
 
 interface InteractiveModalContextValue {

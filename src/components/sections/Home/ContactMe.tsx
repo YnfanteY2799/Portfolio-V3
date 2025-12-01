@@ -1,5 +1,5 @@
 "use client";
-import Balatro from "@/components/ui/backgrounds/balatro";
+import Balatro from "@/components/ui/Backgrounds/balatro";
 import { useState, type ReactNode } from "react";
 import { m as motion } from "motion/react";
 import {
