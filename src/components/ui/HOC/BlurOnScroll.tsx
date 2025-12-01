@@ -7,9 +7,7 @@ import useHasBeenMounted from "@/utils/hooks/useHasBeenMounted";
 import { cn } from "@/utils/functions";
 
 import type { ReactNode, CSSProperties, ElementType, Ref, ComponentPropsWithoutRef } from "react";
-import type { IBlurOnScrollProps } from "@/types/components";
-
-export type CallBackEntryType = { isIntersecting: boolean; intersectionRatio: number; entry: IntersectionObserverEntry };
+import type { CallBackEntryType, IBlurOnScrollProps } from "@/types/components";
 
 // Extend IBlurOnScrollProps to include the 'as' prop for polymorphism
 export type PolymorphicBlurOnScrollProps<T extends ElementType> = {

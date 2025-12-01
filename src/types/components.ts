@@ -138,10 +138,10 @@ export interface ITechCardProps {
 	idx: number;
 	name: string;
 	color: string;
+	Icon: ReactNode;
 	category: string;
 	proficiency: number;
 	description: string;
-	Icon: string | ReactNode;
 }
 
 export interface ITechStackProps {
@@ -177,5 +177,3 @@ export interface IBackgroundMeteorsProps extends ICRSC {
 export interface IBackgroundBeamsProps extends ICRSC {
 	fullScreen?: boolean;
 }
-
-// Tilt Base Wrapper

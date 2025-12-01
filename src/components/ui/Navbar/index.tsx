@@ -1,12 +1,14 @@
 "use client";
-import CVDownloadModal from "@/components/modals/CVDownload";
-import { cn } from "@/utils/functions";
-import useScroll from "@/utils/hooks/useScroll";
 import { domAnimation, LazyMotion, m, useReducedMotion } from "motion/react";
+import CVDownloadModal from "@/components/modals/CVDownload";
+import useScroll from "@/utils/hooks/useScroll";
+import { cn } from "@/utils/functions";
 import Link from "next/link";
-import { ReactNode, useMemo } from "react";
 
-export default function Navbar(): ReactNode {
+import { type ReactNode, memo, useMemo } from "react";
+import ThemeSelector from "@/components/selectors/ThemeSelector";
+
+export default memo(function Navbar(): ReactNode {
 	// Hooks
 	const { scrollStarted } = useScroll({ scrollThreshold: 5, useRaf: true });
 	const prefersReducedMotion = useReducedMotion();
@@ -24,7 +26,7 @@ export default function Navbar(): ReactNode {
 	return (
 		<LazyMotion features={domAnimation} strict>
 			<m.header animate={{ y: 0 }} transition={{ duration: 0.5 }} initial={{ y: prefersReducedMotion ? 0 : -100 }} className={className}>
-				<div className="container flex justify-between my-1 mx-4">
+				<div className="container flex justify-between my-1">
 					<Link href="/Home" className="flex items-center space-x-2">
 						<m.div
 							whileTap={{ scale: 0.95, transition: { duration: 0.1 } }}
@@ -33,17 +35,18 @@ export default function Navbar(): ReactNode {
 							LOG
 						</m.div>
 					</Link>
-					<nav className="hidden md:flex items-center space-x-6 mx-auto">
+					<nav className="hidden md:flex items-center space-x-6">
 						<div>X</div>
 						<div>a</div>
 						<div>n</div>
 						<div>c</div>
 					</nav>
-					<div className="hidden md:flex items-center space-x-3 ml-auto">
+					<div className="hidden md:flex items-center space-x-3">
 						<CVDownloadModal />
+						<ThemeSelector />
 					</div>
 				</div>
 			</m.header>
 		</LazyMotion>
 	);
-}
+});

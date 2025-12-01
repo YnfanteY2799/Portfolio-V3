@@ -154,3 +154,46 @@ export interface UseRippleReturn {
 	ripples: Array<RippleType>;
 	clearRipples: () => void;
 }
+
+/**
+ * Interface representing the return value of the useToggle hook.
+ */
+export interface ReturnUseToggleHook {
+	/**
+	 * The current boolean state value.
+	 */
+	value: boolean;
+
+	/**
+	 * Toggles the boolean value to its opposite state.
+	 * If the current value is true, it becomes false.
+	 * If the current value is false, it becomes true.
+	 *
+	 * This function is memoized with useCallback to maintain referential equality
+	 * across renders, which is important for optimization when passed to child components
+	 * or used in dependency arrays of useEffect hooks.
+	 */
+	toggle: () => void;
+
+	/**
+	 * Sets the boolean value to true.
+	 *
+	 * This is useful when you need to explicitly set the state to true
+	 * regardless of its current value, such as when opening a modal
+	 * or activating a feature in response to an event.
+	 *
+	 * The function is memoized with useCallback for performance optimization.
+	 */
+	setTrue: () => void;
+
+	/**
+	 * Sets the boolean value to false.
+	 *
+	 * This is useful when you need to explicitly set the state to false
+	 * regardless of its current value, such as when closing a modal
+	 * or deactivating a feature in response to an event.
+	 *
+	 * The function is memoized with useCallback for performance optimization.
+	 */
+	setFalse: () => void;
+}
