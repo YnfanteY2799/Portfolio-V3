@@ -10,7 +10,7 @@ import {
 	InteractiveModalBody,
 	InteractiveModalFooter,
 	InteractiveModalClose,
-} from "../ui/dialog";
+} from "../ui/dlogv2.tsx";
 
 export default function CVDownloadModal(): ReactNode {
 	return (

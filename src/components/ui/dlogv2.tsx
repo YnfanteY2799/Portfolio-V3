@@ -10,23 +10,6 @@ type SizeVariant = "default" | "large" | "xl" | "2xl" | "3xl" | "4xl";
 type BackdropVariant = "opaque" | "blur" | "transparent";
 type PositionVariant = "center" | "top" | "bottom";
 
-interface InteractiveModalContextValue {
-	isFullscreen: boolean;
-	setIsFullscreen: (fullscreen: boolean) => void;
-	isMobile: boolean;
-	scrollable: boolean;
-}
-
-const InteractiveModalContext = React.createContext<InteractiveModalContextValue | undefined>(undefined);
-
-const useInteractiveModal = () => {
-	const context = React.useContext(InteractiveModalContext);
-	if (!context) {
-		throw new Error("useInteractiveModal must be used within InteractiveModal");
-	}
-	return context;
-};
-
 /**
  * Custom hook to handle drag-to-dismiss and drag-to-fullscreen gestures
  */
@@ -37,11 +20,8 @@ const useDragToClose = (
 	setIsFullscreen: (value: boolean) => void,
 	onClose: () => void
 ) => {
-	// Hooks
 	const y = useMotionValue(0);
 	const opacity = useTransform(y, [0, 300], [1, 0]);
-
-	// State
 	const [isDragging, setIsDragging] = React.useState(false);
 
 	React.useEffect(() => {
@@ -73,7 +53,7 @@ const useDragToClose = (
 				y.set(0);
 			}
 		},
-		[enabled, isFullscreen, dismissable, setIsFullscreen, onClose, y] // ← Add enabled to deps
+		[enabled, isFullscreen, dismissable, setIsFullscreen, onClose, y]
 	);
 
 	return {
@@ -87,7 +67,6 @@ const useDragToClose = (
 
 /**
  * Root component for the Interactive Modal
- * @param onOpenChange - Callback when modal open state changes
  */
 const InteractiveModal = DialogPrimitive.Root;
 
@@ -129,34 +108,11 @@ InteractiveModalOverlay.displayName = DialogPrimitive.Overlay.displayName;
 
 interface InteractiveModalContentProps
 	extends Omit<React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>, "onPointerDown" | "onPointerMove" | "onPointerUp"> {
-	/**
-	 * Size of the modal on desktop
-	 * @default "default"
-	 */
 	size?: SizeVariant;
-	/**
-	 * Position of the modal on desktop
-	 * @default "center"
-	 */
 	position?: PositionVariant;
-	/**
-	 * Visual style of the backdrop: opaque (default), blur, or transparent
-	 * @default "opaque"
-	 */
 	backdrop?: BackdropVariant;
-	/**
-	 * Whether modal can be closed by clicking outside, pressing Esc, or dragging down on mobile
-	 * @default true
-	 */
 	dismissable?: boolean;
-	/**
-	 * Whether the modal body should scroll independently
-	 * @default false
-	 */
 	scrollable?: boolean;
-	/**
-	 * Callback when modal open state changes
-	 */
 	onOpenChange?: (open: boolean) => void;
 }
 
@@ -178,12 +134,10 @@ const InteractiveModalContent = React.forwardRef<React.ElementRef<typeof DialogP
 		const [isMobile, setIsMobile] = React.useState(false);
 		const [isFullscreen, setIsFullscreen] = React.useState(false);
 
-		// Handle closing the modal
 		const handleClose = React.useCallback(() => {
 			onOpenChange?.(false);
 		}, [onOpenChange]);
 
-		// Drag gesture handling
 		const { y, opacity, isDragging, setIsDragging, handleDragEnd } = useDragToClose(
 			isMobile,
 			dismissable,
@@ -192,7 +146,6 @@ const InteractiveModalContent = React.forwardRef<React.ElementRef<typeof DialogP
 			handleClose
 		);
 
-		// Check if device is mobile
 		React.useEffect(() => {
 			const checkMobile = () => {
 				setIsMobile(window.innerWidth < 768);
@@ -202,7 +155,6 @@ const InteractiveModalContent = React.forwardRef<React.ElementRef<typeof DialogP
 			return () => window.removeEventListener("resize", checkMobile);
 		}, []);
 
-		// Keyboard shortcuts for mobile
 		React.useEffect(() => {
 			if (!isMobile) return;
 
@@ -246,7 +198,7 @@ const InteractiveModalContent = React.forwardRef<React.ElementRef<typeof DialogP
 					type: "spring",
 					damping: 30,
 					stiffness: 300,
-					delay: 0.1, // Delay content animation so backdrop appears first
+					delay: 0.1,
 				},
 			},
 			exit: {
@@ -261,61 +213,71 @@ const InteractiveModalContent = React.forwardRef<React.ElementRef<typeof DialogP
 			},
 		};
 
-		// Memoize context value to prevent unnecessary re-renders
-		const contextValue = React.useMemo(() => ({ isFullscreen, setIsFullscreen, isMobile, scrollable }), [isFullscreen, isMobile, scrollable]);
+		// Clone children and pass props directly instead of using context
+		const enhancedChildren = React.Children.map(children, (child) => {
+			if (React.isValidElement(child)) {
+				// Pass props to specific components that need them
+				if (child.type === InteractiveModalBody) {
+					return React.cloneElement(child as React.ReactElement<any>, {
+						isFullscreen,
+						isMobile,
+						scrollable,
+					});
+				}
+			}
+			return child;
+		});
 
 		return (
-			<InteractiveModalContext.Provider value={contextValue}>
-				<InteractiveModalPortal backdrop={backdrop}>
-					<InteractiveModalOverlay backdrop={backdrop} />
-					<div className={cn("fixed inset-0 z-50 flex justify-center", isMobile ? "items-end" : positionStyles[position])}>
-						<DialogPrimitive.Content
-							ref={ref}
-							asChild
-							onInteractOutside={(e) => {
-								if (!dismissable) {
-									e.preventDefault();
-								}
-							}}
-							onEscapeKeyDown={(e) => {
-								if (!dismissable) {
-									e.preventDefault();
-								}
-							}}
-							{...props}>
-							<motion.div
-								variants={contentVariants}
-								initial="hidden"
-								animate="visible"
-								exit="exit"
-								drag={isMobile ? "y" : false}
-								dragConstraints={{ top: 0, bottom: 0 }}
-								dragElastic={{ top: 0, bottom: 0.5 }}
-								onDragStart={() => setIsDragging(true)}
-								onDragEnd={handleDragEnd}
-								style={isMobile ? { y, opacity: isDragging ? opacity : 1 } : {}}
-								className={cn(
-									"relative z-50 w-full bg-white shadow-lg",
-									isMobile && !isFullscreen && "rounded-t-2xl",
-									isMobile && isFullscreen && "h-full rounded-none",
-									!isMobile && "rounded-lg border border-gray-200",
-									!isMobile && sizeStyles[size],
-									isMobile && !isFullscreen && "max-h-[85vh]",
-									!isMobile && scrollable && "max-h-[90vh]", // Add this line
-									scrollable && "flex flex-col",
-									className
-								)}>
-								{isMobile && (
-									<div className="flex justify-center py-2 cursor-grab active:cursor-grabbing">
-										<div className="w-12 h-1.5 bg-gray-300 rounded-full transition-colors hover:bg-gray-400" />
-									</div>
-								)}
-								{children}
-							</motion.div>
-						</DialogPrimitive.Content>
-					</div>
-				</InteractiveModalPortal>
-			</InteractiveModalContext.Provider>
+			<InteractiveModalPortal backdrop={backdrop}>
+				<InteractiveModalOverlay backdrop={backdrop} />
+				<div className={cn("fixed inset-0 z-50 flex justify-center", isMobile ? "items-end" : positionStyles[position])}>
+					<DialogPrimitive.Content
+						ref={ref}
+						asChild
+						onInteractOutside={(e) => {
+							if (!dismissable) {
+								e.preventDefault();
+							}
+						}}
+						onEscapeKeyDown={(e) => {
+							if (!dismissable) {
+								e.preventDefault();
+							}
+						}}
+						{...props}>
+						<motion.div
+							variants={contentVariants}
+							initial="hidden"
+							animate="visible"
+							exit="exit"
+							drag={isMobile ? "y" : false}
+							dragConstraints={{ top: 0, bottom: 0 }}
+							dragElastic={{ top: 0, bottom: 0.5 }}
+							onDragStart={() => setIsDragging(true)}
+							onDragEnd={handleDragEnd}
+							style={isMobile ? { y, opacity: isDragging ? opacity : 1 } : {}}
+							className={cn(
+								"relative z-50 w-full bg-white shadow-lg",
+								isMobile && !isFullscreen && "rounded-t-2xl",
+								isMobile && isFullscreen && "h-full rounded-none",
+								!isMobile && "rounded-lg border border-gray-200",
+								!isMobile && sizeStyles[size],
+								isMobile && !isFullscreen && "max-h-[85vh]",
+								!isMobile && scrollable && "max-h-[90vh]",
+								scrollable && "flex flex-col",
+								className
+							)}>
+							{isMobile && (
+								<div className="flex justify-center py-2 cursor-grab active:cursor-grabbing">
+									<div className="w-12 h-1.5 bg-gray-300 rounded-full transition-colors hover:bg-gray-400" />
+								</div>
+							)}
+							{enhancedChildren}
+						</motion.div>
+					</DialogPrimitive.Content>
+				</div>
+			</InteractiveModalPortal>
 		);
 	}
 );
@@ -326,9 +288,14 @@ const InteractiveModalHeader = ({ className, ...props }: React.HTMLAttributes<HT
 );
 InteractiveModalHeader.displayName = "InteractiveModalHeader";
 
-const InteractiveModalBody = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => {
-	const { isFullscreen, isMobile, scrollable } = useInteractiveModal();
+interface InteractiveModalBodyProps extends React.HTMLAttributes<HTMLDivElement> {
+	// These props are injected by the parent, but can also be passed manually
+	isFullscreen?: boolean;
+	isMobile?: boolean;
+	scrollable?: boolean;
+}
 
+const InteractiveModalBody = ({ className, isFullscreen, isMobile, scrollable, ...props }: InteractiveModalBodyProps) => {
 	return <div className={cn("px-6 py-4", scrollable && "overflow-y-auto", isMobile && isFullscreen && "flex-1", className)} {...props} />;
 };
 InteractiveModalBody.displayName = "InteractiveModalBody";
