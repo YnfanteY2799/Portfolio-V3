@@ -75,6 +75,11 @@ export function DialogBody({ scrollable, isMobile, isFullscreen, className, ...p
 	return <div className={cn("px-6 py-4", scrollable && "overflow-y-auto", isMobile && isFullscreen && "flex-1", className)} {...props} />;
 }
 
+const positionStyles = {
+	center: "items-center",
+	top: "items-start pt-12",
+	bottom: "items-end pb-12",
+};
 export interface IDialogContetProps {
 	backdrop?: BackdropVariant;
 }
@@ -82,14 +87,14 @@ export interface IDialogContetProps {
 export function DialogContent({ backdrop = "blur", ...props }: IDialogContetProps): ReactNode {
 	return (
 		<DialogPortal data-slot="dialog-portal" backdrop={backdrop}>
-			<DialogPortal backdrop={backdrop}>
-				{/* <div className={cn("fixed inset-0 z-50 flex justify-center", isMobile ? "items-end" : positionStyles[position])}>
+			<DialogOverlay backdrop={backdrop} />
+
+			{/* <div className={cn("fixed inset-0 z-50 flex justify-center", isMobile ? "items-end" : positionStyles[position])}>
 
 
 
           
         </div> */}
-			</DialogPortal>
 		</DialogPortal>
 	);
 }
