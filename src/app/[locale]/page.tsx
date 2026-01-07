@@ -1,12 +1,4 @@
-import {
-	HeroSection,
-	AboutSection,
-	TechStackSection,
-	GitHubActivitySection,
-	ProjectSection,
-	TestimonialsSection,
-	ContactMeSection,
-} from "@/components/sections";
+import { HeroSection, AboutSection, TechStackSection, ContactMeSection } from "@/components/sections";
 import { FloatingSidebar } from "@/components/ui/Navbar/Floating";
 import Navbar from "@/components/ui/Navbar";
 
@@ -23,7 +15,7 @@ export default function Home(): ReactNode {
 			{/* <GitHubActivitySection /> */}
 			{/* <ProjectSection /> */}
 			{/* <TestimonialsSection /> */}
-			<ContactMeSection />
+			{/* <ContactMeSection /> */}
 		</main>
 	);
 }

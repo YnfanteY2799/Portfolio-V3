@@ -6,7 +6,7 @@ import type { IRSC } from "@/types";
 
 export default function AppProvider({ children }: IRSC): ReactNode {
 	return (
-		<ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+		<ThemeProvider attribute="class" defaultTheme="dark">
 			{children}
 		</ThemeProvider>
 	);

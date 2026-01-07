@@ -1,4 +1,4 @@
-import type { RefCallback, RefObject, MouseEvent } from "react";
+import type { RefCallback, RefObject, MouseEvent, TouchEvent } from "react";
 
 /**
  * Options for the Intersection Observer API
@@ -143,16 +143,111 @@ export interface DevicePerformanceOptions {
 	memoryThreshold?: number;
 }
 
+/**
+ * Represents a single ripple effect instance.
+ */
 export interface RippleType {
-	id: number;
+	/**
+	 * Unique identifier for the ripple.
+	 */
+	key: number;
+
+	/**
+	 * X position of ripple center relative to element (in pixels).
+	 */
 	x: number;
+
+	/**
+	 * Y position of ripple center relative to element (in pixels).
+	 */
 	y: number;
+
+	/**
+	 * Diameter of the ripple circle (in pixels).
+	 */
+	size: number;
 }
 
+/**
+ * Configuration options for the useRipple hook.
+ */
+export interface UseRippleOptions {
+	/**
+	 * Whether ripple effect is disabled.
+	 * @default false
+	 */
+	disabled?: boolean;
+
+	/**
+	 * Duration in milliseconds for ripple animation.
+	 * After this duration, ripples are automatically removed.
+	 * Set to 0 to disable auto-removal (manual cleanup required).
+	 * @default 600
+	 */
+	duration?: number;
+
+	/**
+	 * Maximum number of simultaneous ripples allowed.
+	 * Older ripples are removed when limit is exceeded.
+	 * Set to 0 for unlimited ripples.
+	 * @default 3
+	 */
+	maxRipples?: number;
+
+	/**
+	 * Whether ripple effect should emit haptic response.
+	 * @default false
+	 */
+	enableHapticFeedback?: boolean;
+}
+
+/**
+ * Return type for the useRipple hook.
+ */
 export interface UseRippleReturn {
-	createRipple: (event: MouseEvent<Element>) => void;
-	ripples: Array<RippleType>;
-	clearRipples: () => void;
+	/**
+	 * Array of active ripple instances.
+	 * Map over this to render ripple elements in your component.
+	 *
+	 * @example
+	 * {ripples.map(ripple => (
+	 *   <span
+	 *     key={ripple.key}
+	 *     style={{
+	 *       left: ripple.x,
+	 *       top: ripple.y,
+	 *       width: ripple.size,
+	 *       height: ripple.size
+	 *     }}
+	 *   />
+	 * ))}
+	 */
+	ripples: RippleType[];
+
+	/**
+	 * Creates a new ripple at the event's click/touch position.
+	 * Call this in onMouseDown or onTouchStart handlers.
+	 *
+	 * @param event - Mouse or touch event from the target element
+	 *
+	 * @example
+	 * <button onMouseDown={createRipple}>Click me</button>
+	 */
+	createRipple: (event: MouseEvent<HTMLElement> | TouchEvent<HTMLElement>) => void;
+
+	/**
+	 * Removes a specific ripple by its key.
+	 * Useful for manual cleanup when animations complete.
+	 *
+	 * @param key - Unique key of the ripple to remove
+	 */
+	clearRipple: (key: number) => void;
+
+	/**
+	 * Immediately removes all active ripples.
+	 * Useful for cleanup on component state changes.
+	 */
+	clearAllRipples: () => void;
 }
 
 /**

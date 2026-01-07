@@ -146,18 +146,16 @@ export default function useScroll({
 
 	// Calculate max scroll height (accounting for viewport height)
 	const getMaxScrollHeight = useCallback((): number => {
-		if (!isBrowser) return 0;
-
-		return (
-			Math.max(
-				document.documentElement.scrollHeight,
-				document.documentElement.offsetHeight,
-				document.documentElement.clientHeight,
-				document.body.scrollHeight,
-				document.body.offsetHeight,
-				document.body.clientHeight
-			) - window.innerHeight
-		);
+		return !isBrowser
+			? 0
+			: Math.max(
+					document.documentElement.scrollHeight,
+					document.documentElement.offsetHeight,
+					document.documentElement.clientHeight,
+					document.body.scrollHeight,
+					document.body.offsetHeight,
+					document.body.clientHeight
+			  ) - window.innerHeight;
 	}, [isBrowser]);
 
 	// Update maxScrollHeight on resize

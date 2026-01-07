@@ -1,95 +1,203 @@
-import { useState, useCallback, type MouseEvent } from "react";
+import { type MouseEvent, type TouchEvent, useCallback, useEffect, useRef, useState } from "react";
 
-import type { RippleType, UseRippleReturn } from "@/types/hooks";
+import type { UseRippleOptions, UseRippleReturn, RippleType } from "@/types/hooks";
 
 /**
- * A custom React hook for creating ripple effects on UI elements.
+ * Custom React hook for creating Material Design ripple effects.
  *
- * This hook manages ripple animations that appear when users interact with elements,
- * commonly used for Material Design-style feedback effects. It automatically creates
- * and removes ripples based on mouse events and prevents excessive ripples by limiting
- * the maximum number of concurrent animations.
+ * Provides a complete ripple effect system with automatic cleanup, position
+ * calculation, and size scaling. Supports both mouse and touch interactions.
  *
- * @param {number} [d=600] - The duration in milliseconds for each ripple animation.
- *                           After this time, the ripple will be automatically removed.
- *                           Defaults to 600ms.
+ * **Features:**
+ * - Automatic ripple removal after animation duration
+ * - Max ripples limit to prevent memory buildup
+ * - Touch and mouse event support
+ * - Precise positioning based on click/touch location
+ * - Scales to cover entire element
  *
- * @returns {UseRippleReturn} An object containing:
- *   - ripples: Array of active ripple objects with position and id data
- *   - createRipple: Function to trigger a new ripple at the click position
- *   - clearRipples: Function to immediately remove all active ripples
+ * @param options - Configuration options for ripple behavior
+ * @returns Object containing ripple state and control functions
  *
  * @example
- * ```tsx
- * function Button() {
- *   const { ripples, createRipple } = useRipple(800);
+ * // Basic usage
+ * function RippleButton() {
+ *   const { ripples, createRipple } = useRipple();
  *
  *   return (
- *     <button onClick={createRipple} style={{ position: 'relative', overflow: 'hidden' }}>
+ *     <button
+ *       onMouseDown={createRipple}
+ *       style={{ position: 'relative', overflow: 'hidden' }}
+ *     >
  *       Click me
  *       {ripples.map(ripple => (
  *         <span
- *           key={ripple.id}
- *           style={{ left: ripple.x, top: ripple.y }}
- *           className="ripple-animation"
+ *           key={ripple.key}
+ *           className="ripple"
+ *           style={{
+ *             position: 'absolute',
+ *             left: ripple.x,
+ *             top: ripple.y,
+ *             width: ripple.size,
+ *             height: ripple.size,
+ *             borderRadius: '50%',
+ *             background: 'rgba(255, 255, 255, 0.6)',
+ *             transform: 'scale(0)',
+ *             animation: 'ripple-animation 600ms ease-out'
+ *           }}
  *         />
  *       ))}
  *     </button>
  *   );
  * }
- * ```
+ *
+ * @example
+ * // With custom duration and max ripples
+ * const { ripples, createRipple } = useRipple({
+ *   duration: 800,
+ *   maxRipples: 5
+ * });
+ *
+ * @example
+ * // With manual cleanup using onAnimationEnd
+ * const { ripples, createRipple, clearRipple } = useRipple({
+ *   duration: 0 // Disable auto-removal
+ * });
+ *
+ * return (
+ *   <button onMouseDown={createRipple}>
+ *     {ripples.map(ripple => (
+ *       <span
+ *         key={ripple.key}
+ *         onAnimationEnd={() => clearRipple(ripple.key)}
+ *         style={{ animation: 'ripple 600ms' }}
+ *       />
+ *     ))}
+ *   </button>
+ * );
+ *
+ * @example
+ * // Conditional ripples
+ * const [enabled, setEnabled] = useState(true);
+ * const { ripples, createRipple } = useRipple({
+ *   disabled: !enabled
+ * });
+ *
+ * @example
+ * // With CSS animation
+ * // CSS:
+ * // @keyframes ripple-animation {
+ * //   from { transform: scale(0); opacity: 1; }
+ * //   to { transform: scale(1); opacity: 0; }
+ * // }
  */
-export default function useRipple(d: number = 600): UseRippleReturn {
-	/**
-	 * Array of currently active ripple effects.
-	 * Each ripple contains a unique id and x/y coordinates.
-	 */
+export default function useRipple(options: UseRippleOptions = {}): UseRippleReturn {
+	// Props
+	const { disabled = false, duration = 600, maxRipples = 3, enableHapticFeedback = false } = options;
+
+	// Ref's
+	const timeoutRefs = useRef<Map<number, ReturnType<typeof setTimeout>>>(new Map());
+	const rippleKeyRef = useRef(0);
+
+	// State
 	const [ripples, setRipples] = useState<Array<RippleType>>([]);
 
-	/**
-	 * Creates a new ripple effect at the mouse click position.
-	 *
-	 * This function calculates the click position relative to the target element's
-	 * bounding box and creates a new ripple object. The ripple is automatically
-	 * removed after the specified duration. The function prevents creating more
-	 * than 5 concurrent ripples for performance reasons.
-	 *
-	 * @param {MouseEvent<Element>} event - The mouse event from the click interaction
-	 * @param {Element} event.currentTarget - The element that the event listener is attached to
-	 * @param {number} event.clientX - The horizontal coordinate of the mouse pointer
-	 * @param {number} event.clientY - The vertical coordinate of the mouse pointer
-	 *
-	 * @returns {void}
-	 */
-	const createRipple = useCallback(
-		({ currentTarget, clientX, clientY }: MouseEvent<Element>): void => {
-			// Limit concurrent ripples to prevent performance issues
-			if (ripples.length >= 5) return;
+	const clearRipple = useCallback((key: number) => {
+		setRipples((prev) => prev.filter((ripple) => ripple.key !== key));
 
-			// Calculate click position relative to the element
-			const rect = currentTarget.getBoundingClientRect();
+		// Clear associated timeout
+		const timeout = timeoutRefs.current.get(key);
+		if (timeout) {
+			clearTimeout(timeout);
+			timeoutRefs.current.delete(key);
+		}
+	}, []);
+
+	const clearAllRipples = useCallback(() => {
+		setRipples(() => []);
+
+		// Clear all timeouts
+		timeoutRefs.current.forEach((timeout) => clearTimeout(timeout));
+		timeoutRefs.current.clear();
+	}, []);
+
+	const createRipple = useCallback(
+		(event: MouseEvent<HTMLElement> | TouchEvent<HTMLElement>) => {
+			if (disabled) return;
+
+			const element = event.currentTarget;
+			const rect = element.getBoundingClientRect();
+
+			// Get click/touch position
+			let clientX: number;
+			let clientY: number;
+
+			if ("touches" in event) {
+				// Handle case where touches might be empty
+				if (event.touches.length === 0) return;
+				clientX = event.touches[0].clientX;
+				clientY = event.touches[0].clientY;
+			} else {
+				clientX = event.clientX;
+				clientY = event.clientY;
+			}
+
+			// Calculate position relative to element
 			const x = clientX - rect.left;
 			const y = clientY - rect.top;
 
-			// Create ripple with unique ID and position
-			const newRipple: RippleType = { id: Date.now() + Math.random(), x, y };
-			setRipples((prev) => [...prev, newRipple]);
+			// Calculate size to ensure ripple covers entire element
+			const size = Math.max(rect.width, rect.height) * 2;
 
-			// Auto-remove ripple after duration expires
-			setTimeout(() => setRipples((prev) => prev.filter(({ id }) => id !== newRipple.id)), d);
+			// Trigger haptic feedback
+			if (enableHapticFeedback && navigator.vibrate) navigator.vibrate(3);
+
+			// Generate unique key (use modulo to prevent overflow)
+			const key = rippleKeyRef.current;
+			rippleKeyRef.current = (rippleKeyRef.current + 1) % Number.MAX_SAFE_INTEGER;
+
+			const newRipple: RippleType = {
+				key,
+				x: x - size / 2,
+				y: y - size / 2,
+				size,
+			};
+
+			setRipples((prev) => {
+				const updated = [...prev, newRipple];
+
+				// Enforce max ripples limit
+				if (maxRipples > 0 && updated.length > maxRipples) {
+					// Remove oldest ripples
+					const removed = updated.slice(0, updated.length - maxRipples);
+					removed.forEach((ripple) => {
+						const timeout = timeoutRefs.current.get(ripple.key);
+						if (timeout) {
+							clearTimeout(timeout);
+							timeoutRefs.current.delete(ripple.key);
+						}
+					});
+					return updated.slice(-maxRipples);
+				}
+
+				return updated;
+			});
+
+			// Auto-remove ripple after duration
+			if (duration > 0) {
+				const timeout = setTimeout(() => clearRipple(key), duration);
+				timeoutRefs.current.set(key, timeout);
+			}
 		},
-		[d, ripples.length]
+		[disabled, duration, maxRipples, clearRipple, enableHapticFeedback]
 	);
 
-	/**
-	 * Clears all active ripples immediately.
-	 *
-	 * This function removes all ripples from the state, which can be useful
-	 * for cleanup or when you want to reset the ripple effects.
-	 *
-	 * @returns {void}
-	 */
-	const clearRipples = useCallback(() => setRipples([]), []);
+	// Cleanup all timeouts on unmount
+	useEffect(() => {
+		return () => {
+			timeoutRefs.current.forEach((timeout) => clearTimeout(timeout));
+			timeoutRefs.current.clear();
+		};
+	}, []);
 
-	return { ripples, createRipple, clearRipples };
+	return { ripples, createRipple, clearRipple, clearAllRipples };
 }
