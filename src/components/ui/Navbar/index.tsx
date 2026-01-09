@@ -32,14 +32,6 @@ export default memo(function Navbar(): ReactNode {
 				transition={{ duration: 0.5 }}
 				initial={{ y: prefersReducedMotion ? 0 : -100 }}>
 				<div className="container flex justify-between my-1" aria-label="Main navigation">
-					<div className="absolute bottom-0 left-4 right-4 h-0.5 bg-transparent rounded-full overflow-hidden" aria-hidden="true">
-						<m.div
-							transition={{ duration: 0.1 }}
-							style={{ width: `${scrollProgress}%` }}
-							className="h-full bg-accent via-accent to-primary rounded-full origin-left"
-						/>
-					</div>
-
 					<Link href="/" className="flex items-center space-x-2">
 						<m.div
 							whileTap={{ scale: 0.95, transition: { duration: 0.1 } }}
@@ -57,6 +49,14 @@ export default memo(function Navbar(): ReactNode {
 					<div className="hidden md:flex items-center space-x-3">
 						<CVDownloadModal />
 						<ThemeSelector />
+					</div>
+
+					<div className="absolute bottom-0 left-0.5 right-0.5 h-0.5 bg-transparent rounded-full overflow-hidden" aria-hidden="true">
+						<m.div
+							transition={{ duration: 0.1 }}
+							style={{ width: `${scrollProgress}%` }}
+							className="h-full bg-accent via-accent to-primary rounded-full origin-left"
+						/>
 					</div>
 				</div>
 			</m.header>

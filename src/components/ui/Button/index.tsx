@@ -59,7 +59,7 @@ export default function Button({
 	...props
 }: IButtonProps): ReactNode {
 	// Hooks
-	const { ripples, createRipple } = useRipple(600);
+	const { ripples, createRipple } = useRipple();
 
 	// Component
 	const Comp = asChild ? Slot : "button";
@@ -67,7 +67,7 @@ export default function Button({
 	// Callbacks
 	const handleClick = useCallback(
 		(event: MouseEvent<HTMLButtonElement>): void => {
-			if (!disableRipple) createRipple(event as MouseEvent<Element>);
+			if (!disableRipple) createRipple(event);
 			onClick?.(event);
 		},
 		[createRipple, disableRipple, onClick]
@@ -85,7 +85,7 @@ export default function Button({
 			{/* Ripple container */}
 			{!disableRipple && (
 				<span className="absolute inset-0 pointer-events-none">
-					{ripples.map(({ id, x, y }) => (
+					{ripples.map(({ x, y }, id) => (
 						<span
 							key={id}
 							style={{ left: x - 10, top: y - 10 }}
