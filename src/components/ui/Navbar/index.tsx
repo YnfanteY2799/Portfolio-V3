@@ -18,9 +18,9 @@ export default memo(function Navbar(): ReactNode {
 		() =>
 			cn(
 				"fixed top-0 left-0 right-0 z-[20] transition-all duration-200 will-change-transform",
-				scrollStarted ? "bg-background/70 backdrop-blur-xl py-2 shadow-md" : "bg-transparent py-2 shadow-md"
+				scrollStarted ? "bg-background/70 backdrop-blur-xl py-2 shadow-md" : "bg-transparent py-2 shadow-md",
 			),
-		[scrollStarted]
+		[scrollStarted],
 	);
 
 	return (
@@ -31,7 +31,7 @@ export default memo(function Navbar(): ReactNode {
 				className={className}
 				transition={{ duration: 0.5 }}
 				initial={{ y: prefersReducedMotion ? 0 : -100 }}>
-				<div className="container flex justify-between my-1" aria-label="Main navigation">
+				<div className="container flex justify-between" aria-label="Main navigation">
 					<Link href="/" className="flex items-center space-x-2">
 						<m.div
 							whileTap={{ scale: 0.95, transition: { duration: 0.1 } }}
@@ -40,14 +40,20 @@ export default memo(function Navbar(): ReactNode {
 							LOG
 						</m.div>
 					</Link>
-					<nav className="hidden md:flex items-center space-x-6">
+
+					<a
+						href="#main-content"
+						className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded-lg">
+						Skip to main content
+					</a>
+
+					<nav className="hidden md:flex items-center space-x-6" aria-label="Internal navigation">
 						<div>X</div>
 						<div>a</div>
 						<div>n</div>
 						<div>c</div>
 					</nav>
 					<div className="hidden md:flex items-center space-x-3">
-						<CVDownloadModal />
 						<ThemeSelector />
 					</div>
 

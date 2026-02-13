@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
  */
 export default function useHasBeenMounted(): boolean {
 	// Use undefined as initial state to avoid hydration mismatch
-	const [hasMounted, setHasMounted] = useState<boolean | undefined>(undefined);
+	const [hasMounted, setHasMounted] = useState<boolean>(false);
 
 	// Only run this effect once on client-side
 	useEffect(() => setHasMounted(() => true), []);
