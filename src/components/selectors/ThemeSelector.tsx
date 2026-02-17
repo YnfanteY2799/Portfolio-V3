@@ -1,8 +1,8 @@
 "use client";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown";
+import { type ReactNode, type MouseEvent, useRef, useCallback } from "react";
 import MoonStarIcon from "@/components/svg/animateds/icons/MoonStars";
 import useHasBeenMounted from "@/utils/hooks/useHasBeenMounted.ts";
-import { type ReactNode, type MouseEvent, useRef, useCallback } from "react";
 import SunIcon from "@/components/svg/animateds/icons/Sun";
 import { AnimatePresence, m } from "motion/react";
 import useToggle from "@/utils/hooks/useToggle";
@@ -49,24 +49,27 @@ export default function ThemeSelector(): ReactNode {
 	/** Controls the open/closed state of the dropdown menu */
 	const { value, toggle } = useToggle();
 
-	const changeTheme = useCallback(async function ({ currentTarget: { id } }: MouseEvent): Promise<void> {
-		if (!buttonRef.current || id === theme) return;
+	const changeTheme = useCallback(
+		async function ({ currentTarget: { id } }: MouseEvent): Promise<void> {
+			if (!buttonRef.current || id === theme) return;
 
-		await document.startViewTransition(() => flushSync(() => setTheme(() => id))).ready;
+			await document.startViewTransition(() => flushSync(() => setTheme(() => id))).ready;
 
-		const { top, left, width, height } = buttonRef.current.getBoundingClientRect();
-		const y = top + height / 2;
-		const x = left + width / 2;
+			const { top, left, width, height } = buttonRef.current.getBoundingClientRect();
+			const y = top + height / 2;
+			const x = left + width / 2;
 
-		const right = window.innerWidth - left;
-		const bottom = window.innerHeight - top;
-		const maxRad = Math.hypot(Math.max(left, right), Math.max(top, bottom));
+			const right = window.innerWidth - left;
+			const bottom = window.innerHeight - top;
+			const maxRad = Math.hypot(Math.max(left, right), Math.max(top, bottom));
 
-		document.documentElement.animate(
-			{ clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${maxRad}px at ${x}px ${y}px)`] },
-			{ duration: 700, easing: "ease-in-out", pseudoElement: "::view-transition-new(root)" }
-		);
-	}, [value]);
+			document.documentElement.animate(
+				{ clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${maxRad}px at ${x}px ${y}px)`] },
+				{ duration: 700, easing: "ease-in-out", pseudoElement: "::view-transition-new(root)" },
+			);
+		},
+		[value],
+	);
 
 	return hasBeenMounted ? (
 		<DropdownMenu open={value} onOpenChange={toggle}>
